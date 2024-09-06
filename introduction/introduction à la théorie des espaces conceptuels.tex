@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[french]{babel}
+\usepackage{forest}
+\usepackage{setspace}  % Ajout du package setspace
+\usepackage[a4paper, margin=1.2in]{geometry} % Définit les marges à 1 pouce
+
+\newcommand{\bolditalic}[1]{\textbf{\textit{#1}}}
+
+\begin{document}
+
+\section*{Qu’est-ce qu’un espace conceptuel ?}
+\doublespacing  % Définir l'interligne à 1.5
+
+Chaque espace conceptuel est une représentation géométrique de certains concepts du langage naturel. Il est constitué par des dimensions qui représentent chacune une \textit{qualité} comme la couleur, la hauteur d’un son, la température, etc.\footnote{Gardenfors (2015, sec. 3.5): « Examples of such dimensions are: color, pitch, temperature, weight. »}
+L'hypothèse centrale est que le sens peut être représenté par un espace sémantique pouvant être décrit en termes de dimensions, de distances, de régions et d’autres notions géométriques.\footnote{Gärdenfors (2014, sect. 2.1): « A central idea is that the meanings that we use in communication can be described as organized in abstract spatial structures that are expressed in terms of dimensions, distances, regions, and other geometric notions. In addition, I also use some notions from vector algebra. »}
+Chaque objet est caractérisé par des valeurs sur ces dimensions, chaque valeur représentant une qualité respective de l'objet.
+
+\subsection*{1.1. Dimensions et domaines}
+\doublespacing  % Définir l'interligne à 1.5
+
+Un domaine est un ensemble de dimensions intrinsèquement liées et indissociables. Un domaine est typiquement une \textit{modalité sensorielle}.\footnote{Bechberger, (2023, p.14) : «  quality dimensions are (…) typically assumed to be based on perception ».} 
+
+Par exemple, les couleurs sont un domaine : un stimulus visuel comporte toujours les dimensions de \textit{luminosité} et de \textit{saturation}, perçues de manière conjointe et inséparable. De la même manière, un son est invariablement caractérisé par une \textit{hauteur} et une \textit{intensité}.
+
+\subsection*{1.2. Les propriétés, les concepts et les instances}
+
+Dans un espace conceptuel, une \bolditalic{propriété} est représentée par une \textit{région} dans un domaine unique\footnote{Gardenfors (2000, sec. 3.5) ; (2015, p.4) : « A natural property is a convex region of a domain in a conceptual space ».}. Une propriété correspond à une qualité ou un attribut, souvent exprimé par un adjectif. L'\textit{espace} contenu dans cette région correspond non seulement aux informations sur les membres déjà observés, mais aussi sur les membres \textit{potentiels} non encore rencontrés. Etant définie sur plusieurs dimensions d'un domaine, l’extension de la région indique toutes les combinaisons de valeurs possibles sur ces dimensions pour les membres de la catégorie correspondante. Ainsi, la propriété ROUGE est appréhendée comme une \textit{région} dans le domaine des couleurs. Ces propriétés sont dites \textit{gradées} car elles peuvent prendre des valeurs \textit{continues} dans les intervalles définis par chaque dimension du domaine. Plus précisément, si $\Delta$ est le domaine des couleurs, alors, pour chaque dimension $d_i \in \Delta$, il existe un intervalle de valeurs correspondant à l'extension du rouge sur cette dimension.
+\par
+Dans un espace conceptuel, chaque \bolditalic{exemplaire} d'une propriété est représenté par un \textit{point} situé à l'intérieur de la région correspondant à cette propriété. Dans le langage courant, l'expression "couleur spécifique" peut faire référence soit à une \textit{région}, soit à un \textit{exemplaire}. Pour éviter cette ambiguïté et distinguer ces deux genres d’emplois, lorsqu’un mot réfère à une \textit{région}, nous l'écrirons en majuscule. Par exemple, cette différence apparaît explicitement dans la phrase : « cette nuance de \bolditalic{rouge} est un \bolditalic{point} dans la \bolditalic{région} du \bolditalic{ROUGE} ». Cette notation permet de distinguer les \textit{petites régions} correspondant à des \textit{propriétés spécifiques} des simples points représentant des exemplaires\footnote{Un exemplaire peut avoir plusieurs instances, le mot "exemplaire" n'a pas de dimension métaphysique ici}. Ainsi, au lieu d’écrire que le carmin \textit{appartient} au ROUGE, on peut employer une relation d'\textit{inclusion} par exemple dans la phrase : « CARMIN est contenue dans ROUGE » pour exprimer que la première est une petite région contenue dans la seconde. La distance entre deux points exprime la similarité perçue entre eux. Plus la distance est grande, moins ils sont similaires, et inversement.
+\par
+Contrairement aux \textit{propriétés}, les \bolditalic{concepts} recouvrent plusieurs domaines. Chaque concept est \textit{défini} par une combinaison de régions provenant de différents domaines. Ces régions contiennent \textit{toutes les instances possibles} de ce concept sur leur domaine respectif. Par exemple, le concept de « pomme » est représenté par des régions dans quatre domaines : la couleur (e.g. rouge, vert, jaune), le goût (e.g. variant de sucré à acidulé), la forme (e.g. ronde, ovale, cycloïde), la texture (e.g. croquante, molle). Bien plus que de simples \textit{qualificatifs}, ces régions \textit{définissent} le concept de pomme.
+\par
+Comme évoqué précédemment, les régions sur ces domaines ne s’identifient pas à des prédicats binaires : une pomme singulière est un point dont les coordonnées reflètent les valeurs précises de cette pomme en termes de couleur, goût, forme, et texture (e.g. une pomme rouge foncé, sucrée, etc.). Une telle décomposition fonctionne en principe pour n’importe quel concept, par exemple « oiseau », englobe des propriétés réparties dans différents domaines tels que la forme, la taille, la couleur, le poids, etc.
+
+Montrons explicitement qu’un concept se \textit{décompose} en \textit{régions} dans différents domaines, et comment ces domaines se décomposent chacun en un petit nombre de dimensions.
+La région dans l’espace conceptuel qui représente un concept $\mathcal{C}$ peut être vue comme un sous-ensemble du produit cartésien de $n$ différents domaines :
+\[ R(\mathcal{C}) \subset \Delta_1 \times \cdots \times \Delta_n \]
+où chaque domaine $\Delta_i$ est généralement défini sur une, deux ou trois dimensions et possède une aire/un volume total \textit{fini}.\footnote{Pour les domaines sensoriels comme la vision et l’audition, ce caractère fini est particulièrement intuitif. Cela signifie que pour une dimension telle que la hauteur tonale (“aigu / grave”), il existe des limites au-delà desquelles nous ne percevons pas les sons comme plus aigus ou plus graves. Il en va de même pour la vision, où des limites similaires existent pour les couleurs ou les intensités lumineuses.}  Par commodité, chaque dimension d’un domaine est identifiée à un intervalle borné dans $\mathbb{R}$. Une instance spécifique du concept $\mathcal{C}$ peut être représentée par un point $\mathbf{x}$ :
+\[ \mathbf{x} = \langle x_1, \ldots, x_n \rangle \in R(\mathcal{C}) \]
+où chaque $x_i$ représente un point dans le domaine $\Delta_i$, et correspond donc à un vecteur de dimension $m \in \{1, 2, 3\}$ selon le nombre de dimensions dans le domaine $\Delta_i$. En d’autres termes, si $\mathbf{x}$ est une instance de $\mathcal{C}$, la composante $x_i$ de $\mathbf{x}$ situe dans la région associée au concept $\mathcal{C}$ sur le domaine $\Delta_i$. Cette région est strictement inclue dans $\Delta_i$. Formellement, si la région associée au concept $\mathcal{C}$ dans le domaine $m$-dimensionnel $\Delta_i$ est notée $R_i(\mathcal{C})$, on a :
+\[ x_i \in R_i(\mathcal{C}) \subset \Delta_i \subset \mathbb{R}^m \]
+
+Ainsi la représentation dans un espace conceptuel est \bolditalic{compositionnelle} : toutes les exemplaires spécifiques d'un concept sont des points\footnote{Biensûr, puisque le grain n'est jamais "infiniment fin", les exemplaires pourraient aussi être représentés par de très petites régions (cf.2.5.2)}  localisés dans chacune de ses régions en fonction de leurs attributs sur chaque dimension.
+\par
+Notons toutefois que la compositionnalité sur laquelle s’appuie la théorie des espaces conceptuels est \textit{plus faible} que la compositionnalité linguistique, qui postule que la sémantique d’un concept peut être décomposée en unités linguistiques \textit{connues}. En effet, en général, \textit{aucun adjectif connu} ne correspond précisément à la région correspondant à un concept sur un domaine donné. Malgré cela, il est souvent possible d’approximer la région correspondant à ce concept par une union de petites régions.\footnote{Par exemple, notons le domaine des couleurs $\Delta_i$ et la région correspondant au concept de ``citron'' dans le domaine des couleurs par $R_i(\text{``citron''})$. La région $R_i(\text{``citron''})$ semble pouvoir être approximée par :
+\[R_i(\text{citron}) \approx \text{JAUNE} \cup \text{\mbox{VERT CLAIR}}\]
+
+Cependant, plus il y a de nuances dans JAUNE $\cup$ VERT CLAIR qui ne sont jamais instanciées par aucun citron, plus cette approximation est imparfaite. Par ailleurs, pour rendre compte de la \textit{répartition inégale} des citrons entre ces deux couleurs (par exemple, s’ils sont plus souvent jaunes que verts), des contraintes supplémentaires seraient nécessaires, autrement dit $R_i(\text{citron})$ pourrait ne pas exactement
+correspondre à la sémantique des adjectifs « jaune » et « vert clair » lorsqu’ils sont utilisés seuls.\par
+Il n’en reste pas moins qu’il y a souvent une analogie forte entre la région correspondant à un concept dans un domaine et les régions des adjectifs dans ce même domaine.}
+
+\subsection*{L’équivalence entre les représentations arborescentes et spatiales}
+
+\doublespacing  % Définir l'interligne à 1.5
+
+Dans son \textit{Organon}, Aristote définit le \textit{genre} (\textgreek{g'enos}) comme un \textit{prédicat} commun à plusieurs choses ayant des \textit{différences spécifiques} entre elles.\footnote{ARISTOTE, Organon, Topiques I, 5, 102a31-32.} Ainsi le genre est un attribut essentiel partagé par plusieurs espèces (\textgreek{e>'idos}). Par exemple, « animal » est le genre commun à l’espèce humaine, à l’espèce des chevaux, des oiseaux, etc. Chaque espèce se définit par l’ajout d’une différence spécifique au genre. Dans ce cadre, l’espèce des « lions » peut être définie comme des félins (genre) dotés d’une crinière (différence spécifique). Le genre a donc une plus grande extension, car il inclut plusieurs espèces, tandis que l’espèce nécessite plus de conditions dans sa définition, puisqu’elle contient des déterminations supplémentaires par rapport au genre.\footnote{ARISTOTE, Organon, Topiques IV, 1, 121a10-14.}
+\par
+La relation « X et Y sont deux \textit{sortes} de Z » (ou de manière équivalente « Z est le \textit{genre} de X et Y ») peut être représentée de deux manières distinctes : soit de manière \bolditalic{arborescente} où X et Y sont deux nœuds inférieurs connectés au nœud supérieur Z, soit de manière \bolditalic{spatiale}, où X et Y sont \textit{inclus} à l’intérieur de Z comme dans une boîte. Les propriétés qui définissent Z sont également attribuées à X et Y. Interprété dans une arborescence, cela veut dire que les nœuds inférieurs \textit{héritent} des propriétés des nœuds supérieurs. Interprété spatialement, cela veut dire qu’une propriété définissant un ensemble est \textit{transmise} à ses sous-ensembles. Ainsi, plus un nœud est \textit{haut} dans l’arborescence, plus les propriétés qui le caractérisent sont \textit{générales}, et inversement. De la même manière, moins les conditions requises pour appartenir à Z sont restrictives et spécifiques, plus l’extension de Z sera \textit{vaste}, et inversement. Ces principes semblent particulièrement bien exemplifiés dans les taxonomies des êtres vivants, ou bien dans celles des objets mathématiques. Par exemple, Nicole et Arnauld (1662) proposent une arborescence hiérarchique entre quelques \textit{concepts géométriques}\footnote{NICOLE et ARNAULT (1992, p.311) utilisent un signe d'accolade pour noter la partition d'un ensemble en sous-ensembles. Ils décrivent ces relations par les notions de genres et d'espèces, par exemple : « le quadrilatère, qui est un genre au regard du parallélogramme et du trapèze, est une espèce au regard de la figure » (1992, p. 53).} :
+
+\begin{forest}
+for tree={
+  grow=east, % Growth direction is from left to right
+  parent anchor=east, child anchor=west, % Anchors
+  l sep=20pt, % Level separation
+  s sep=25pt, % Sibling separation
+  edge={line width=1pt, -} % Line width and style
+}
+[polygone
+  [triangle
+    [triangle isocèle]
+    [triangle droit
+      [triangle droit isocèle]
+      [triangle droit irrégulier]
+    ]
+    [triangle obtus]
+  ]
+  [quadrangle
+    [parallélogramme]
+    [trapèze]
+  ]
+  [pentagone]
+]
+\end{forest}
+
+Chaque nœud de l'arborescence représente un ensemble d’objets satisfaisant des propriétés
+déterminées. Nicole et Arnault précisent que l’ensemble des triangles « peut se diviser selon les côtés, ou selon les angles »\footnote{\textit{Ibid} (1992, p.311).}. La division selon les angles est illustrée dans l’arborescence ci-dessus, tandis que la division selon les côtés aurait produit trois branches : triangles isocèles, équilatéraux et scalènes. La partition dépend de la propriété prise en compte.
+
+\end{document}
