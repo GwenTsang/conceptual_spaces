@@ -2,9 +2,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-\usepackage[french]{babel}
+\usepackage[greek,english, french]{babel}
 \usepackage{forest}
-\usepackage{setspace}  % Ajout du package setspace
+\usepackage{amssymb}
+\usepackage{setspace}
+\usepackage{amsmath}  % Pour la commande \text{}
 \usepackage[a4paper, margin=1.2in]{geometry} % Définit les marges à 1 pouce
 
 \newcommand{\bolditalic}[1]{\textbf{\textit{#1}}}
@@ -12,7 +14,7 @@
 \begin{document}
 
 \section*{Qu’est-ce qu’un espace conceptuel ?}
-\doublespacing  % Définir l'interligne à 1.5
+\doublespacing  % Définir l'interligne à 2
 
 Chaque espace conceptuel est une représentation géométrique de certains concepts du langage naturel. Il est constitué par des dimensions qui représentent chacune une \textit{qualité} comme la couleur, la hauteur d’un son, la température, etc.\footnote{Gardenfors (2015, sec. 3.5): « Examples of such dimensions are: color, pitch, temperature, weight. »}
 L'hypothèse centrale est que le sens peut être représenté par un espace sémantique pouvant être décrit en termes de dimensions, de distances, de régions et d’autres notions géométriques.\footnote{Gärdenfors (2014, sect. 2.1): « A central idea is that the meanings that we use in communication can be described as organized in abstract spatial structures that are expressed in terms of dimensions, distances, regions, and other geometric notions. In addition, I also use some notions from vector algebra. »}
@@ -45,12 +47,11 @@ où chaque $x_i$ représente un point dans le domaine $\Delta_i$, et correspond 
 
 Ainsi la représentation dans un espace conceptuel est \bolditalic{compositionnelle} : toutes les exemplaires spécifiques d'un concept sont des points\footnote{Biensûr, puisque le grain n'est jamais "infiniment fin", les exemplaires pourraient aussi être représentés par de très petites régions (cf.2.5.2)}  localisés dans chacune de ses régions en fonction de leurs attributs sur chaque dimension.
 \par
-Notons toutefois que la compositionnalité sur laquelle s’appuie la théorie des espaces conceptuels est \textit{plus faible} que la compositionnalité linguistique, qui postule que la sémantique d’un concept peut être décomposée en unités linguistiques \textit{connues}. En effet, en général, \textit{aucun adjectif connu} ne correspond précisément à la région correspondant à un concept sur un domaine donné. Malgré cela, il est souvent possible d’approximer la région correspondant à ce concept par une union de petites régions.\footnote{Par exemple, notons le domaine des couleurs $\Delta_i$ et la région correspondant au concept de ``citron'' dans le domaine des couleurs par $R_i(\text{``citron''})$. La région $R_i(\text{``citron''})$ semble pouvoir être approximée par :
+Notons toutefois que la compositionnalité sur laquelle s’appuie la théorie des espaces conceptuels est \textit{plus faible} que la compositionnalité linguistique, qui postule que la sémantique d’un concept peut être décomposée en unités linguistiques \textit{connues}. En effet, en général, \textit{aucun adjectif connu} ne correspond précisément à la région correspondant à un concept sur un domaine donné. Malgré cela, il est souvent possible d’approximer la région correspondant à ce concept par une union de petites régions.\footnote{Par exemple, notons le domaine des couleurs $\Delta_i$ et la région correspondant au concept de ``citron'' dans le domaine des couleurs par $R_i(\text{\og citron \fg{}})$. La région $R_i(\text{\og citron \fg{}})$ semble pouvoir être approximée par :
 \[R_i(\text{citron}) \approx \text{JAUNE} \cup \text{\mbox{VERT CLAIR}}\]
 
-Cependant, plus il y a de nuances dans JAUNE $\cup$ VERT CLAIR qui ne sont jamais instanciées par aucun citron, plus cette approximation est imparfaite. Par ailleurs, pour rendre compte de la \textit{répartition inégale} des citrons entre ces deux couleurs (par exemple, s’ils sont plus souvent jaunes que verts), des contraintes supplémentaires seraient nécessaires, autrement dit $R_i(\text{citron})$ pourrait ne pas exactement
-correspondre à la sémantique des adjectifs « jaune » et « vert clair » lorsqu’ils sont utilisés seuls.\par
-Il n’en reste pas moins qu’il y a souvent une analogie forte entre la région correspondant à un concept dans un domaine et les régions des adjectifs dans ce même domaine.}
+Cependant, plus il y a de nuances dans JAUNE $\cup$ VERT CLAIR qui ne sont jamais instanciées par aucun citron, plus cette approximation est imparfaite. Par ailleurs, pour rendre compte de la \textit{répartition inégale} des citrons entre ces deux couleurs (par exemple, s’ils sont plus souvent jaunes que verts), des contraintes supplémentaires seraient nécessaires, autrement dit $R_i(\text{\og citron \fg{}})$ pourrait ne pas exactement correspondre à la sémantique des adjectifs « jaune » et « vert clair » lorsqu’ils sont utilisés seuls.
+\par Il n’en reste pas moins qu’il y a souvent une analogie forte entre la région correspondant à un concept dans un domaine et les régions des adjectifs dans ce même domaine.}
 
 \subsection*{L’équivalence entre les représentations arborescentes et spatiales}
 
@@ -87,5 +88,18 @@ for tree={
 
 Chaque nœud de l'arborescence représente un ensemble d’objets satisfaisant des propriétés
 déterminées. Nicole et Arnault précisent que l’ensemble des triangles « peut se diviser selon les côtés, ou selon les angles »\footnote{\textit{Ibid} (1992, p.311).}. La division selon les angles est illustrée dans l’arborescence ci-dessus, tandis que la division selon les côtés aurait produit trois branches : triangles isocèles, équilatéraux et scalènes. La partition dépend de la propriété prise en compte.
+
+\section*{Représenter la sémantique des concepts ordinaires comme des régions :
+un défi pour la théorie des espaces conceptuels}
+
+
+Comme évoqué, les relations hiérarchiques entre ces concepts sont représentables, soit par une \textit{arborescence}, soit de manière \textit{spatiale} où l'extension des concepts est représentée par des boîtes incluses les unes dans les autres. Contrairement à la représentation arborescente, la spatialisation permet de quantifier des mesures comme la \textit{taille} des différentes boîtes ou les \textit{distances} entre elles. Une grande part de la recherche mobilise les espaces conceptuels pour saisir ces avantages : il ne suffit pas d'écrire \og CONCEPT A $\subset$ CONCEPT B \fg mais il faut tenter de déterminer la \textit{taille} de l'extension de A par rapport à celle de B, de déterminer la \textit{distance} séparant les extensions de A et de B. L'ambition de déterminer la \textit{taille} des régions correspondant à l'extension des concepts ainsi que leurs \textit{distances} a reçu un certain succès pour les catégories sensorielles et particulièrement pour les \textit{couleurs}.
+\par
+Depuis environ une décennie, une partie de la recherche\footnote{Derrac et Schockaert (2015, p.69): "Most approaches represent natural language terms as points or vectors"} dans le cadre des espaces conceptuels s'inspire des \textit{plongements sémantiques} (\textit{word embedding}) dans lesquels les mots sont représentés sous la forme de grands vecteurs, ce qui les rend représentables sous forme de \bolditalic{points} dans des espaces avec plusieurs centaines de dimensions \bolditalic{non interprétables}. Puisque chaque mot est représenté par un vecteur unique, ces modèles permettent de mesurer la distance et la similarité entre deux mots. Selon nous, cette approche diffère de la théorie des espaces conceptuels aux deux égards suivants.
+\par
+Premièrement, la théorie des espaces conceptuels représente les concepts comme des \bolditalic{régions} qui délimitent l'ensemble des objets qui satisfont les conditions d'appartenance du concept. La représentation avec des points rend moins bien compte de la variabilité et de la flexibilité de la sémantique des concepts concernés. Deuxièmement, les dimensions individuelles qui constituent les mots-vecteurs dans les modèles d’embeddings de mots sont généralement très difficiles à interpréter, tandis que dans les espaces conceptuels, chaque dimension représente une qualité \bolditalic{interprétables}\footnote{BECHBERGER (2023, p. 271): “Interpretable dimensions, however, are a corner stone of the conceptual spaces framework”.}. (\textit{e.g.} pour les \textit{couleurs} : le degré de luminosité, de teinte, de saturation (cf. chap. 1), pour le \textit{goût} : le degré d’acidité, de douceur\footnote{D’autres dimensions peuvent aussi être prises en compte dans le domaine du goût (BOLT et al. 2019, p.168). Bien que degré d'acidité soit généralement une dimension séparée du degré de douceur (sweetness) et qu'elles soient séparées du domaine des couleurs, BECHBERGER (2023, pp. 89-97) formalise la corrélation entre la couleur verte d'une pomme et son acidité, ainsi qu’entre la couleur rouge d'une pomme et sa douceur.}, etc.) Il y a de nombreuses techniques permettant de rapprocher les prolongements sémantiques  avec les espaces conceptuels. Avant de les détailler, les motivations sont données dans le paragraphe suivant.
+
+
+
 
 \end{document}
