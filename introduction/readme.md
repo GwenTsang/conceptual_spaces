@@ -1,9 +1,5 @@
-\documentclass{article}
-\usepackage{svg}
-
-\begin{document}
-
-\includesvg[width=0.5\textwidth]{image.svg}
-
-\end{document}
-
+Ce répertoire contient une introduction à la théorie des espaces conceptuels, dans les formats :
+- LaTeX
+- PDF
+- Word anglais
+- Word français
