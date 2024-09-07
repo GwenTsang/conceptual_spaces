@@ -4,14 +4,19 @@
 \usepackage{lmodern}
 \usepackage[greek,english, french]{babel}
 \usepackage{forest}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
 \usepackage{amssymb}
 \usepackage{stmaryrd}
 \usepackage{setspace}
 \usepackage{amsmath}  % Pour la commande \text{}
 \usepackage[a4paper, margin=1.2in]{geometry} % Définit les marges à 1 pouce
+\usepackage{caption}
+\captionsetup{labelformat=empty}  % Removes "Figure X" from captions
 
 \newcommand{\bolditalic}[1]{\textbf{\textit{#1}}}
-
+\pgfplotsset{compat=1.18}
 \begin{document}
 
 \section*{Qu’est-ce qu’un espace conceptuel ?}
@@ -122,5 +127,52 @@ L’un des avantages de l’hypothèse de Shepard est qu’elle peut être \text
 \par
 Pour rendre cela plus concret, donnons un autre exemple : on peut déterminer une liste d’animaux, qui sont liés à des caractéristiques, comme leurs habitats respectifs (terrestre, aquatique, aérien), leurs tailles (petit, moyen, grand). Les données issues des jugements de similarité sur ces animaux peuvent être \textit{projetées} dans un espace de similarité en appliquant un MDS. Puis il s’agit d’interpréter cet espace \textit{à partir} de la liste des caractéristiques initialement établie. C’est précisément ce que proposent Douven et al. (2023), avec l’espace de similarité suivant :
 
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    width=95.28mm,
+    height=95.28mm,
+    xmin=0, xmax=95.28,
+    ymin=0, ymax=95.28,
+    axis on top,
+    y dir=reverse,
+    xtick=\empty,
+    ytick=\empty,
+]
+    \node at (axis cs:79.26,44.85) {camel};
+    \node at (axis cs:38.02,26.66) {cat};
+    \node at (axis cs:62.72,33.04) {chimpanzee};
+    \node at (axis cs:85.60,66.20) {cow};
+    \node at (axis cs:37.97,38.26) {dog};
+    \node at (axis cs:77.28,54.73) {donkey};
+    \node at (axis cs:47.73,30.98) {fox};
+    \node at (axis cs:76.48,39.04) {giraffe};
+    \node at (axis cs:79.91,73.25) {goat};
+    \node at (axis cs:52.06,27.68) {gorilla};
+    \node at (axis cs:85.08,49.19) {horse};
+    \node at (axis cs:44.85,4.40) {lion};
+    \node at (axis cs:19.59,88.18) {mouse};
+    \node at (axis cs:69.39,71.54) {pig};
+    \node at (axis cs:28.52,83.79) {rabbit};
+    \node at (axis cs:30.93,93.17) {rat};
+    \node at (axis cs:83.94,69.74) {sheep};
+    \node at (axis cs:40.54,11.28) {tiger};
+    \node at (axis cs:46.16,24.65) {wolf};
+    \node at (axis cs:84.98,37.03) {zebra};
+\end{axis}
+\end{tikzpicture}
+\caption{Espace de similarité contenant 20 mammifères. Extrait de Douven et al. (2023)} 
+\end{figure}
+
+L’axe $y$ semble corrélé à la férocité des vingt mammifères\footnote{Henley (1969, p.180): “[the dimension] seems to be characterizable as one of mildness vs. ferocity”.} et l’axe $x$ semble corrélé à leurs tailles. On peut essayer de donner du sens aux différents clusters, en identifiant celui du bas comme correspondant aux petits animaux, celui à gauche comme correspondant aux herbivores, et celui du haut aux carnivores\footnote{Henley (1969, pp.180-181): "Again there is the grouping into small animals (rabbit and mouse), herbivores (cow, deer, horse, goat, sheep) and other carnivores (bear, lion, dog, cat)".}.
+
+Dans ce mémoire, nous explorons la question de savoir si les espaces conceptuels sont adaptés \textit{uniquement} aux catégories sensorielles, et difficilement applicables aux catégories dont la signification englobe une plus grande variété de domaines. En effet, l’utilisation des \textit{domaines}, c’est-à-dire d’ensembles de dimensions indissociables, paraît  \textit{prima facie} particulièrement adaptée pour les catégories sensorielles. D’un côté, Gärdenfors (2014) affirme que les dimensions des espaces conceptuels sont étroitement liées à ce qui est produit par les récepteurs sensoriels\footnote{Gardenfors (2014): “These dimensions are closely connected to what is produced by our sensory receptors”}, de l’autre côté, il écrit qu’il existe aussi des dimensions qualitatives abstraites et non sensorielles\footnote{“there also exist quality dimensions that are of an abstract, non sensory character” (2015).}. Les recherches ont souvent porté sur la modalité des \textit{couleurs} définie par les dimensions de la teinte, de l'intensité et de la luminosité. D’autres recherches l’ont appliqué à la catégorie des \textit{sons} en utilisant des dimensions telles que la hauteur et l'intensité\footnote{Bolt et al. (2019, chap.9).}. D’autres encore l’ont appliqué à la modalité du goût avec des dimensions telles que le sucré, l'acide, l'amer et le salé\footnote{Bechberger (2023, 75-78) note les dimensions du goût par “TASTE = 〈sweet ; sour ; bitter ; salt〉"}.
+\par
+À notre connaissance, aucun modèle ne permet aujourd’hui de représenter la sémantique des concepts du langage naturel en combinant (i) \textit{interprétabilité} des dimensions, (ii) représentation des concepts comme \textit{régions} et (iii) performances prédictives.
+
+
+\end{document}
 
 \end{document}
