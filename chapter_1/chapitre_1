@@ -14,17 +14,28 @@
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage{titlesec}
+\usepackage{footmisc}
+
+
+\renewcommand{\footnoterule}{%
+    \vspace{1em}  % Adjust the vertical space above the footnote rule
+    \hrule width \textwidth height 0.5pt  % Customize the footnote rule
+    \vspace{1em}  % Adjust the vertical space below the footnote rule
+}
 
 
 % Redéfinir les commandes de section pour inclure un alinéa suspendu
 \titleformat{\section}[hang]{\normalfont\Large\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}[hang]{\normalfont\large\bfseries}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}[hang]{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[hang]{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
 
 % Ajouter un alinéa suspendu pour les titres de sections
 \titlespacing*{\section}{2em}{*4}{*1}
 \titlespacing*{\subsection}{2em}{*4}{*1}
 \titlespacing*{\subsubsection}{4em}{*4}{*1}
+\titlespacing*{\paragraph}{4em}{*4}{*1}
+
 \newcommand{\bolditalic}[1]{\textbf{\textit{#1}}}
 
 \usepackage{caption}
@@ -217,7 +228,41 @@ Dans l’espace colorimétrique, le prototype est un point dont la position est 
 \par
 Pour catégoriser une nuance de couleur selon la théorie du prototype, il suffit de mesurer sa distance avec les prototypes de chaque catégorie plutôt que de calculer sa similarité avec tous les membres de toutes les catégories. Contrairement aux théories de la catégorisation basées sur les exemplaires, dans la théorie du prototype, le plus proche voisin d’un élément x inconnu n’est jamais une exception ou une valeur marginale, mais sera toujours un prototype maximalement représentatif de sa catégorie. Un élément est considéré comme appartenant à une catégorie si sa distance avec le prototype de cette catégorie est inférieure à sa distance avec tous les autres prototypes de toutes les autres catégories\footnote{Gärdenfors (2000, pp.92-97 ; sec.4.9) : \og An object represented as a vector $x_i$ in a conceptual space belongs to the category for which the corresponding prototypical circle is the closest \fg Voir aussi (Douven, 2016).}. 
 
-.
+\paragraph{1.4.4-a Propriétés géométriques des régions représentant les catégories de couleurs}\mbox{} 
+Supposons que la représentativité d’une nuance pour une couleur $\mathcal{C}$ soit calculable par une fonction prenant toutes les valeurs réelles entre 0 et 1 notée $M_\mathcal{C}: U \rightarrow [0;1]$. Le domaine $\mathcal{U}$ sur lequel cette fonction est définie correspond à un espace colorimétrique où la distance entre deux points correspond à la dissimilarité perçue entre les deux nuances représentées par ces points. Si cette fonction attribue une valeur $k$ à un point $x$ (c’est-à-dire $M_\mathcal{C}(x)=k$), cela signifie intuitivement que $x$ est représentatif de la couleur $\mathcal{C}$ avec un degré $k$. Tous les exemplaires de la couleur $\mathcal{C}$ ont une valeur de représentativité non nulle ($M_\mathcal{C}(x)>0$), tandis que toutes les nuances $x$ n’ayant pas la couleur $\mathcal{C}$ ont une valeur de représentativité égale à zéro ($M_\mathcal{C}(x)=0$). Les éléments de la catégorie $\mathcal{C}$ sont donc représentés par l’ensemble des $x$ tels que $x\in\mathcal{U}$ et $M_\mathcal{C}(x)>0$. De plus, par définition, si p note le prototype de $\mathcal{C}$, il prend la valeur maximale de l'intervalle puisqu'il est maximalement représentatif de la catégorie ($M_\mathcal{C}(x)=1$).
+\par
+Plusieurs études empiriques\footnote{Hampton et al. (2005) mènent une expérience sur la frontière entre le BLEU et le VIOLET. Ils écrivent que la contrainte d'ordre a été respectée dans 5992 essais sur 6000 : "In Experiments 2 and 3, only eight such non-monotonic responses occurred, out of almost 6000 opportunities".} suggèrent que les extensions des catégories de couleurs satisfont une propriété qui indique qu’elles correspondent à des régions n’ayant pas aucune \textit{discontinuité}, aucun \textit{trous}. Cette propriété s’énonce intuitivement comme suit : si un sujet juge qu’une nuance $x$ est ROUGE, alors toutes les nuances $y$ situées entre $x$ et le prototype du ROUGE seront également jugées comme étant ROUGE à un degré au moins égal à celui de $x$. Plus généralement, si $x$ appartient à la catégorie $\mathcal{C}$ et que $p$ en est maximalement représentatif, alors tous les mélanges intermédiaires entre $x$ et $p$ seront aussi dans $\mathcal{C}$. Dans des termes plus formels : si \( p \) est le prototype de la catégorie \( \mathcal{C} \), pour tout \( x \in \mathcal{C} \), toutes les nuances \( y \) sur le segment \([p,x]\) satisferont l’inégalité : 
+\[
+0 < M_{\mathcal{C}}(x) \leq M_{\mathcal{C}}(y) \leq 1.
+\] 
+Puisque \( y \) satisfait \( M_{\mathcal{C}}(y) > 0 \), la nuance représentée par ce point est dans la catégorie \( \mathcal{C} \). Cette propriété peut être exprimée formellement comme suit :
+\[
+\forall x \in U, \ M_{\mathcal{C}}(x) > 0 \implies \forall \lambda \in \left[0,1\right], \ M_{\mathcal{C}}(\lambda x + (1 - \lambda)p) > 0.
+\]
+Une région qui satisfait cette propriété est dite étoilée par rapport au prototype $p$\footnote{On peut l'exprimer en écrivant que le degré d'appartenance à la catégorie \(\mathcal{C}\) est une fonction monotone de la distance dans la direction spécifique du segment \([p,x]\) :
+\vspace{-0.5em}
+\begin{equation*}
+\forall x \in \mathcal{C}, \forall \lambda, \lambda' \in \left[0,1\right]^2, (\lambda < \lambda') \Rightarrow \left[ M_{\mathcal{C}}(\lambda' x + (1 - \lambda') p) \leq M_{\mathcal{C}}(\lambda x + (1 - \lambda) p) \right]
+\end{equation*}
+\vspace{-0.5em}
+\noindent Une formule équivalente est donnée en utilisant le prédicat \(Btw(x, y, z)\) signifiant que \(y\) est entre \(x\) et \(z\) :
+\vspace{-0.5em}
+\begin{equation*}
+\forall z, y, x \in \mathcal{C}, \left[ Btw(p, y, x) \land Btw(p, z, y) \right] \Rightarrow M_{\mathcal{C}}(z) \leq M_{\mathcal{C}}(y) \leq M_{\mathcal{C}}(x)
+\end{equation*}
+\vspace{-1em}
+},
+
+
+et toute région étoilée ne contient \textit{aucun trou}\footnote{Douven (2013, p.140) : "A region R is said to be connected iff, for all points \(p_i\)  and \(p_j\) in R, there is a curve [a path] connecting \(p_i\)  and \(p_j\) such that the curve [the path] lies entirely in R".}. En effet, un trou devrait être un point \( t \) satisfaisant \( M_{\mathcal{C}}(t)=0 \) qui se trouve entre \( p \) et un autre point \( x \) tel que \( M_{\mathcal{C}}(x)>0 \), ce qui est impossible car, si $\mathcal{C}$ est étoilé par rapport à $p$, \( M_{\mathcal{C}} \) est strictement positif sur tout le segment \(\left[p;x\right]\).
+\par
+	Dire qu’une région est étoilée par rapport à l’ensemble de ses points revient à dire que pour toute paire de points $x$ et $z$ dans $\mathcal{C}$, tous les points $y$ sur le segment reliant $x$ à $z$ sont également dans $\mathcal{C}$. Dans des termes plus concrets, si $x$ et $y$ sont deux nuances de ROUGE, alors toutes les nuances intermédiaires entre x et y seront également ROUGE. Selon Gärdenfors, toutes les catégories des couleurs doivent être représentées par des régions qui vérifient ce principe de \bolditalic{convexité géométrique}, qui est plus exigeant que le précédent\footnote{Un ensemble est convexe s'il est étoilé par rapport à \textit{tous} ses points, ainsi, un ensemble étoilé par rapport à \textit{un} point n’est pas nécessairement convexe.}. Le fait d'imposer cette convexité à \textit{toutes les régions} d'un même espace colorimétrique a une conséquence sur la \textit{forme} des frontières entre ces régions. En effet, si la frontière entre deux régions $A$ et $B$ présente une courbure, alors au moins l'une des deux régions $A$ ou $B$ n’est \textit{pas convexe}\footnote{ \og courbé\fg est ici équivalent à \og non-rectiligne \fg}. Sous cette contrainte de convexité géométrique, la seule façon de séparer deux régions adjacentes est d’utiliser comme frontières des \textit{segments de droite}. Une technique géométrique permettant de délimiter de telles frontières, tout en respectant les hypothèses de \textit{convexité géométrique}, d’\textit{existence des prototypes}, et d’\textit{organisation optimale} des catégories de couleurs est mise en œuvre dans la partie suivante.
+
+\paragraph{1.4.4-b Le pavage de l’espace colorimétrique}\mbox{} 
+
+ La théorie du prototype, fondée sur l’homogénéité au sein des catégories, trouve un parallèle géométrique dans les pavages de Voronoï, où la notion de similarité entre deux nuances est interprétée comme la proximité entre deux points. Tout comme une nuance de couleur est attribuée à une catégorie dans la théorie du prototype, si elle est plus similaire à son prototype qu’à tout autre, dans les pavages de Voronoï, un point est défini comme appartenant à une région s’il est plus proche de son site que de tout autre site. Cette interprétation géométrique de la théorie du prototype, où il s’agit de trouver le prototype le plus proche de tout élément x à catégoriser, permet de paver l’espace colorimétrique en régions de Voronoï qui correspondent aux extensions des différentes couleurs.
+
+
 \bibliographystyle{plain}
 \bibliography{references}
 
