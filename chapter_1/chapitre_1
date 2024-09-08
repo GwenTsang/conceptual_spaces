@@ -1,0 +1,151 @@
+\documentclass{article}
+\usepackage{indentfirst}  % Adds indentation to the first paragraph of each section
+\usepackage{amsmath}      % Provides additional math symbols
+\usepackage{amssymb}      % Provides \mathbb for blackboard bold symbols
+\usepackage{hyperref}     % For hyperlinks in the bibliography
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usetikzlibrary{3d}
+\usepackage{pgfplots}
+\usepackage{tikz-3dplot}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage{caption}
+\captionsetup{labelformat=empty}  % Removes "Figure X" from captions
+
+\setlength{\parindent}{15pt}  % Adjust the size of the paragraph indent
+\linespread{1.5}  % Set line spacing to 1.5 times
+
+\begin{document}
+
+\section*{\centering Chapitre I}
+\section*{\centering Application de la théorie des espaces conceptuels aux couleurs}
+
+\subsection*{1.1. De RGB à HSL}
+
+\hspace*{\parindent}Un espace colorimétrique est utilisé pour représenter l'organisation tridimensionnelle des couleurs. Les couleurs sont mappées le long d'axes qui représentent différentes propriétés de couleur. Un premier exemple est l'espace $\mathbf{RGB}$ dont les trois dimensions représentent respectivement le rouge, le vert et le bleu.
+
+Une nuance de couleur singulière est représentée dans $\mathbf{RGB}$ par un triplet\footnote{Cet espace est souvent utilisé en informatique, où la valeur du rouge, du vert et du bleu est encodée par un octet qui peut avoir 256 valeurs différentes.} $\left(x_1,x_2,x_3\right) \in \left(R \times G \times B\right)$ où $R \times G \times B = \llbracket 0 ; 255 \rrbracket \times \llbracket 0 ; 255 \rrbracket \times \llbracket 0 ; 255 \rrbracket \subset \mathbb{N}^3$. Intuitivement, ce triplet représente le niveau de rouge, de vert et de bleu dans la nuance de couleur singulière.
+
+Plus généralement, l'espace $\mathbf{RGB}$ modélise chaque nuance de couleur comme une combinaison additive de sa valeur sur les trois dimensions de rouge, vert et bleu. L'espace $\mathbf{RGB}$ peut être représenté par un cube, où chaque axe représente l'intensité des composantes : rouge, vert et bleu.
+
+Bien que l'espace \textbf{RGB} ait le mérite d'être simple, nous présenterons deux idées schématiques qui montrent qu'il n'est pas du tout adapté pour modéliser la vision humaine. Premièrement, puisque les dimensions de \textbf{RGB} sont chromatiques, l'information de luminosité doit être extraite des trois composantes encodant la chromaticité. Cependant, pour modéliser le système visuel humain, il est plus approprié d'isoler un paramètre de luminosité des paramètres de chromaticité \cite[p.78]{fairchild2013}. La deuxième critique concerne les couleurs opposées dans \textbf{RGB}. Lorsque l'espace \textbf{RGB} est représenté comme un cube, il apparaît que chaque sommet -- qui correspond intuitivement à une \og couleur pure \fg -- a un sommet opposé qui est également le plus éloigné sur le cube. En d'autres termes, les quatre diagonales joignant les quatre sommets opposés sur le cube indiquent les quatre paires de couleurs les plus éloignées (cf. Fig. 1a). Ainsi, l'une des lacunes du modèle \textbf{RGB} est que le sommet opposé à celui du ROUGE est celui correspondant au CYAN. Cependant, au cours des XIXe et XXe siècles, un certain nombre d'études empiriques et de théories\footnote{Basé sur des expériences psychophysiques, Hering (1834-1918) a soutenu que le rouge carmin est l'opposé du vert et que le bleu est l'opposé du jaune. Cette idée a donné naissance à la théorie des processus opposés, qui stipule schématiquement que certains stimuli verts et certains stimuli rouges génèrent des réponses neurobiologiques opposées (sur les 3 types de bâtonnets : L ; S ; M) ou même antagonistes (mutuellement incompatibles).} soutiennent l'idée que la couleur la plus opposée au ROUGE est le VERT, et non le CYAN comme c'est le cas dans \textbf{RGB}.
+
+Gärdenfors \cite[section 2.1]{gardenfors2014} présente l'espace colorimétrique tridimensionnel \textbf{HSL}, comprenant les dimensions de teinte, de saturation et de luminosité. Ce modèle résout les deux problèmes précédemment soulevés : premièrement, il dissocie la dimension de luminosité des dimensions chromatiques, et deuxièmement, il sépare le ROUGE et le VERT sur l'axe de saturation aussi loin que possible (voir Fig. 1.b).
+
+\begin{figure}[h]
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[x={(0.5cm,-0.5cm)}, y={(1cm,0cm)}, z={(0cm,1cm)}]
+
+% Define the coordinates of the cube
+\coordinate (A) at (0,0,0);
+\coordinate (B) at (2,0,0);
+\coordinate (C) at (2,2,0);
+\coordinate (D) at (0,2,0);
+\coordinate (E) at (0,0,2);
+\coordinate (F) at (2,0,2);
+\coordinate (G) at (2,2,2);
+\coordinate (H) at (0,2,2);
+
+% Draw the back face
+\draw[thick] (D) -- (C) -- (B) -- (A) -- cycle;
+
+% Draw the front face
+\draw[thick] (E) -- (F) -- (G) -- (H) -- cycle;
+
+% Connect the front and back faces
+\draw[thick] (A) -- (E);
+\draw[thick] (B) -- (F);
+\draw[thick] (C) -- (G);
+\draw[thick] (D) -- (H);
+
+% Add colored circles with black outlines at the vertices
+\draw[black, fill=white] (A) circle (3pt);
+\draw[black, fill=red] (B) circle (3pt);
+\draw[black, fill=yellow] (C) circle (3pt);
+\draw[black, fill=green] (D) circle (3pt);
+\draw[black, fill=blue] (E) circle (3pt);
+\draw[black, fill=magenta] (F) circle (3pt);
+\draw[black, fill=black] (G) circle (3pt);
+\draw[black, fill=cyan] (H) circle (3pt);
+
+\end{tikzpicture}
+\caption{Figure 1a. L'espace \textbf{RVB}}  % Custom caption text
+\label{fig:rgb_cube}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=1.2]  % Adjust the scale factor as needed
+    % Set up a 3D coordinate system with more inclined viewing angles
+    \tdplotsetmaincoords{115}{15}  % Adjust elevation to 115° and azimuth to 15° (slight X-axis rotation)
+    \begin{scope}[tdplot_main_coords]
+
+        % Vertices for the upper and lower points of the tetrahedron
+        \coordinate (A) at (0,0,2);  % Top vertex (white)
+        \coordinate (F) at (0,0,-2); % Bottom vertex (black)
+
+        % Coordinates for the flat ellipse and colored points
+        \coordinate (B) at (1.5,0,0);   % Right point on the X-axis (magenta)
+        \coordinate (C) at (-1.5,0,0);  % Left point on the X-axis (green)
+        \coordinate (G) at (0,0,0);     % Center point (grey)
+
+        % Adjusted coordinates for yellow and blue points to lie on the ellipse
+        \coordinate (D) at (0,0.8,0);     % Front point on the ellipse (yellow)
+        \coordinate (E) at (0,-0.8,0);    % Back point on the ellipse (blue)
+
+        % Draw the ellipse (thin, flat in the XY plane)
+        \draw[thick] plot[smooth,domain=0:360]
+            ({1.5*cos(\x)}, {0.8*sin(\x)}, 0); % Ellipse with 1*sin(\x) for the Y component
+
+        % Draw the perpendicular diametric segments (X-axis and Z-axis)
+        \draw[thick] (B) -- (C);  % X-axis segment (green-magenta)
+        \draw[thick] (D) -- (E);  % Z-axis segment (yellow-blue)
+
+        % Draw the edges connecting the top and bottom vertices to the points on the ellipse
+        \draw[thick] (A) -- (B);
+        \draw[thick] (A) -- (C);
+        \draw[thick] (A) -- (D);
+        \draw[thick] (A) -- (E);
+        \draw[thick] (F) -- (B);
+        \draw[thick] (F) -- (C);
+        \draw[thick] (F) -- (D);
+        \draw[thick] (F) -- (E);
+
+        % Add the vertices as colored points
+        \filldraw[fill=white, draw=black] (A) circle (2pt);  % top vertex (white)
+        \filldraw[fill=black, draw=black] (F) circle (2pt);  % bottom vertex (black)
+        \filldraw[fill=magenta, draw=black] (B) circle (2pt);  % right (magenta)
+        \filldraw[fill=green, draw=black] (C) circle (2pt);  % left (green)
+        \filldraw[fill=yellow, draw=black] (D) circle (2pt);  % front (yellow)
+        \filldraw[fill=blue, draw=black] (E) circle (2pt);  % back (blue)
+        \filldraw[fill=gray, draw=black] (G) circle (2pt);  % center (grey)
+
+    \end{scope}
+\end{tikzpicture}
+\caption{Figure 1b. L'espace \textbf{HSL}}  % Custom caption text
+\label{fig:tetrahedron}
+\end{minipage}
+\end{figure}
+
+\subsection*{1.2. Partir des expériences psychophysiques sur la vision humaine}
+
+La \textit{Commission internationale de l'éclairage} (CIE) est l'institution en charge des normes pour la photométrie et la colorimétrie. En 1976, la CIE a recommandé l'utilisation de l'espace \textbf{CIELAB} pour représenter les couleurs vues sur papier ou textiles, et l'espace \textbf{CIELUV} pour représenter les couleurs perçues sur un écran. Depuis lors, l'espace \textbf{CIELAB} a été ajusté, corrigé et optimisé, ce qui est moins le cas avec \textbf{CIELUV}, dont l'utilisation a quelque peu diminué en faveur d'autres espaces\footnote{Fairchild (2013, pp.313-316) passe en revue les conditions de plusieurs expériences dans lesquelles \textbf{CIELAB} a obtenu de meilleurs résultats que \textbf{CIELUV}. Entre autres, il cite une expérience utilisant des comparaisons par paires d'images imprimées dans laquelle les prédictions de \textbf{CIELAB} étaient significativement meilleures que celles de \textbf{CIELUV} (\textit{Ibid}, p.313).}. Pour mettre en place ces espaces colorimétriques et les opérations correspondantes, la CIE a d'abord dû définir certaines \textit{conditions de référence psychophysiques}. Ces conditions sont celles d'un « observateur standard » qui est utilisé pour \textit{standardiser} les différents résultats d'observations, c'est-à-dire pour les interpréter selon les mêmes normes méthodologiques. Par exemple, l'une des normes pour les tests colorimétriques est l'utilisation de l'illuminant D65, qui a été défini statistiquement à partir de nombreuses mesures de la lumière du jour (Fairchild, 2013, p.62). Dans « D65 », la majuscule « \textit{D} » indique qu'il s'agit d'une mesure de la lumière du jour (« Daylight ») et le nombre indique approximativement la température de couleur\footnote{La température de D65 est de 6504 Kelvin.}. L'illuminant D65 est un blanc légèrement froid qui correspond à peu près à la lumière du jour dans l'hémisphère nord, sous des ciels légèrement nuageux, entre 10h et 12h au printemps et en automne (Berns 2019, p.4; Hirsch, 2014, p.72). En plus de l'éclairage, les conditions de référence psychophysiques incluent également les modalités d'objet (par exemple, \textit{tissu, papier, écran}), la couleur de fond ou la taille du stimulus en degrés d'angle visuel\footnote{En 1995, la CIE a introduit une mesure de différence de couleur appelée « CIE94 », dont les conditions de référence incluent un fond uniforme avec un gris neutre (L = 50) et un angle visuel supérieur à 4°, ce qui correspond à peu près à la taille perçue d'un cercle de 3,5 cm de diamètre placé à 50 cm d'un observateur (Berns 2019, p.103; Fairchild 2013, p.83).}
+
+L'espace \textbf{CIELAB} est défini en trois dimensions \textit{〈L ;a ;b〉}. L'axe \textit{a} représente la saturation, l'axe \textit{b} représente la teinte et l'axe \textit{L} indique le degré de luminosité. Ainsi, bien que la structure des espaces \textbf{CIELAB} et \textbf{CIELUV} semble similaire\footnote{Sur les différences précises entre \textbf{CIELAB} et \textbf{CIELUV}, voir (Fairchild, 2013, p.211).} à celle de \textbf{HSL} (ils comprennent une dimension dédiée à la luminosité, et la teinte y est déterminée par rotation), contrairement à \textbf{HSL}, ces espaces s’appuient sur de nombreuses données psychophysiques concernant les jugements de similarité entre couleurs. Bien que l’espace \textbf{HSL} semble mieux représenter que \textbf{RVB} le système visuel humain, il n’est pas construit à partir de données empiriques concernant les jugements de similarité entre les couleurs.
+\par
+Les espaces \textbf{CIELAB} et \textbf{CIELUV} ont ouvert la voie à de nombreux \textit{Modèles d’Apparence des Couleurs} (MAC). Ces modèles cherchent à décrire mathématiquement le fonctionnement de la vision humaine des couleurs. Par exemple, l’espace \textbf{CIELAB} peut prédire le fait qu'une couleur, comme celle d'une pomme rouge, est perçue de manière \textit{constante} malgré les variations de source lumineuse, comme le soleil, un feu ou une ampoule électrique. Ce phénomène, appelé \textit{adaptation chromatique}, intégré à \textbf{CIELAB}, dérive d’une loi formulée en 1902 par le physiologiste allemand von Kries\footnote{L’idée de von Kries est que les trois types de cônes (\textit{L, M, S}) dans la rétine humaine ajustent leur sensibilité en fonction de la lumière ambiante. A la place de coder les signaux de ces cônes isolément, les lois de von Kries cherchent à tenir compte de l’intensité de la lumière ambiante dans la détermination de la chromaticité (Fairchild, 2013, sec. 9.1 ; Berns, 2019, p.22).}. Il existe aujourd’hui de nombreuses variantes, dont certaines visent à prendre en compte plus de facteurs pour mieux reproduire d’autres phénomènes de la perception visuelle humaine, tels que l’effet des zones adjacentes ou contours\footnote{Il est par exemple possible, dans le MAC \textbf{CIECAM02}, d’intégrer comme variable la luminosité du contour (surround) (Fairchild, 2013, p.289) ; c’est également possible dans le plus récent \textbf{CAM16}. }.
+\par
+La transformation des espaces \textbf{RVB} ou \textbf{HSL} à ces espaces est non linéaire\footnote{Fairchild (2013, p.43): « CIELAB color space that are based on a cube-root compressive power-law nonlinearity ».}, cela signifie que la distance euclidienne entre deux points dans \textbf{RVB} ou \textbf{HSL} ne sera pas la même dans ces espaces. Imaginons par exemple qu’on pioche arbitrairement trois nuances de couleurs différentes dans \textbf{RVB}. Pour exemplifier cette non-linéarité, prenons $x$, $y$, $z \in$ \textbf{RVB}. trois triplets différents correspondant à trois nuances de couleurs.  Soit la fonction \(\mathcal{D}_E\colon\left(\mathbb{R}^3\right)^2\rightarrow\mathbb{R}^+\) permettant de mesurer la distance euclidienne entre deux vecteurs tridimensionnels \footnote{$\mathcal{D}_E(x,y)=\sqrt{\sum_{i=1}^{3}\left(x_i - y_i \right)^2}$}. Imaginons que la distance entre $x$ et $y$ (\textit{resp.} $z$) est $k$ fois plus petite (resp. grande) que la distance entre $x$ et $z$ (\textit{resp.} $z$), en d’autres termes $\exists k\in\mathbb{R}\ \ \ k\times\mathcal{D}_E\left(x,y\right)=\ \mathcal{D}_E\left(x,z\right)$. 
+
+
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
