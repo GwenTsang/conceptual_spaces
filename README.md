@@ -2,7 +2,7 @@
 
 Les ouvrages de Gärdenfors [(2000)](https://doi.org/10.7551/mitpress/2076.001.0001) et [(2014)](https://doi.org/10.7551/mitpress/9629.001.0001) constituent une introduction détaillée à la théorie des espaces conceptuels.
 
-Nous avons également rédigé une introduction en langue française disponible dans ce répertoire en LaTeX : https://github.com/ZygoOoade/conceptual_spaces/blob/main/introduction/introduction%20à%20la%20théorie%20des%20espaces%20conceptuels.tex
+Nous avons également rédigé une introduction en langue française en LaTeX disponible dans [ce répertoire](https://github.com/ZygoOoade/conceptual_spaces/blob/main/introduction/introduction%20à%20la%20théorie%20des%20espaces%20conceptuels.tex) : 
 
 Les deux fichiers [Figures_RGB_SL.ipynb](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Figures.%20RGB%20-%20HSL.ipynb) et [Towards_a_Voronoi_Cell.ipynb](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Vers_une_cellule_de_Voronoï.ipynb) ont été utilisés pour générer des figures servant à illustrer mon propos dans [ce document](https://drive.google.com/file/d/1aH7IRMDfj3Cjz2B0EjOcGe75CNksNWy0/view?usp=drive_link). Plus précisément, le second fichier sert toute la partie 1.4.4 du document dans laquelle nous expliquons précisément comment construire une cellule de Voronoï par intersection de demis-plans.
 
