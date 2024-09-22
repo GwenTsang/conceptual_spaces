@@ -19,35 +19,38 @@ Une amélioration des codes python présent consisterait à trouver une méthode
 Il semble intuitivement que tout point qui n'est pas sur la droite qui traverse p_i et p_r vérifie la seconde condition si l'on considère que l'espace bidimensionnel en question est infini.
 
 
-   - **Définitions** : Les régions \( R(a, b) \) sont définies comme des demi-plans constitués de tous les points plus proches de \( a \N) que de \( b \N), c'est-à-dire, \( R(a, b) = \{ x \Ndans \mathbb{R}^2 : |x - a| \leq |x - b| \} \).
-   - **Objectif** : Prouver que pour tout point \( p_k \N) qui n'est pas sur la ligne passant par \( p_i \N) et \( p_r \N), les régions \( R(p_k, p_i) \N et \( R(p_i, p_r) \N) ont une intersection non vide, c'est-à-dire que \( R(p_k, p_i) \Ncap R(p_i, p_r) \Nneq \Nemptyset \N).
+- **Définitions** : Les régions \(R(a, b)\) sont définies comme des demi-plans constitués de tous les points plus proches de \(a\) que de \(b\), c'est-à-dire,
+  \( R(a, b) = \{ x \in \mathbb{R}^2 : |x - a| \leq |x - b| \} \).
+  
+- **Objectif** : Prouver que pour tout point \(p_k\) qui n'est pas sur la ligne passant par \(p_i\) et \(p_r\), les régions \(R(p_k, p_i)\) et \(R(p_i, p_r)\) ont une intersection non vide, c'est-à-dire que \(R(p_k, p_i) \cap R(p_i, p_r) \neq \emptyset\).
 
-**Placer \( p_i \) à l'Origine** :
-   - Sans perte de généralité, vous supposez que \N( p_i \N) est à l'origine \N((0, 0)\N). Ceci est valable puisque toute transformation rigide qui déplace \Np_i \Nà l'origine préservera les distances entre les points, et donc la structure des bissectrices et des régions.
+**Placer \(p_i\) à l'origine** :
+- Sans perte de généralité, on suppose que \(p_i\) est à l'origine \((0, 0)\). Ceci est valable puisque toute transformation rigide qui déplace \(p_i\) à l'origine préservera les distances entre les points, et donc la structure des bissectrices et des régions.
 
 **Bisecteurs** :
-   - Vous avez correctement identifié que les bissectrices sont essentielles. La bissectrice entre \N-( p_i \N) et \N-( p_r \N) est l'ensemble des points équidistants de \N-( p_i \N) et \N-( p_r \N), qui forme une ligne, comme indiqué :
-   \[
-   \sqrt{x^2 + y^2} = \sqrt{(x - x_r)^2 + (y - y_r)^2}
-   \]
-   Après quadrillage et simplification, on obtient l'équation de la bissectrice \( B_{i,r} \N) :
-   \[
-   2x x_r + 2y y_r = x_r^2 + y_r^2
-   \]
-   De même, on trouve l'équation de la bissectrice entre \Np_i \Net \Np_k \N, \Nb_{k,i} \Nqui est :
-   \[
-   2x x_k + 2y y_k = x_k^2 + y_k^2
-   \]
+- Les bissectrices sont essentielles. La bissectrice entre \(p_i\) et \(p_r\) est l'ensemble des points équidistants de \(p_i\) et \(p_r\), ce qui forme une ligne, comme indiqué :
+  \[
+  \sqrt{x^2 + y^2} = \sqrt{(x - x_r)^2 + (y - y_r)^2}
+  \]
+  Après quadrillage et simplification, on obtient l'équation de la bissectrice \(B_{i,r}\) :
+  \[
+  2x x_r + 2y y_r = x_r^2 + y_r^2
+  \]
+  De même, on trouve l'équation de la bissectrice entre \(p_i\) et \(p_k\), \(B_{k,i}\), qui est :
+  \[
+  2x x_k + 2y y_k = x_k^2 + y_k^2
+  \]
 
 **Intersection des demi-plans** :
-   - Vous concluez à juste titre que puisque \Npour p_k \Nn'est pas sur la droite passant par \Npour p_i \Net \Np_r \N, les bissectrices \Npour B_{i,r} \Net \Npour B_{k,i} \Nne peuvent pas être parallèles - elles doivent se croiser en un seul point.
-   - Par conséquent, les demi-plans \NR(p_i, p_r) \Net \NR(p_k, p_i) \Nforment un coin convexe, ce qui implique que leur intersection n'est pas vide. Cette étape est cruciale, car la convexité des régions garantit que toute intersection entre les bissectrices conduit à un chevauchement non vide des demi-plans.
+- Puisque \(p_k\) n'est pas sur la droite passant par \(p_i\) et \(p_r\), les bissectrices \(B_{i,r}\) et \(B_{k,i}\) ne peuvent pas être parallèles — elles doivent se croiser en un seul point.
+- Par conséquent, les demi-plans \(R(p_i, p_r)\) et \(R(p_k, p_i)\) forment un coin convexe, ce qui implique que leur intersection n'est pas vide. Cette étape est cruciale, car la convexité des régions garantit que toute intersection entre les bissectrices conduit à un chevauchement non vide des demi-plans.
 
 **Convexité et intersection non vide** :
-   - L'argument ici est correct : les régions sont convexes, et l'intersection d'ensembles convexes est également convexe, donc l'intersection doit contenir des points (à moins que les régions ne soient disjointes, ce qui, selon vous, n'arrive que si \( p_k \N) est sur la ligne passant par \( p_i \N) et \N( p_r \N)).
+- L'argument ici est correct : les régions sont convexes, et l'intersection d'ensembles convexes est également convexe. Donc, l'intersection doit contenir des points (à moins que les régions ne soient disjointes, ce qui, selon l'hypothèse, n'arrive que si \(p_k\) est sur la ligne passant par \(p_i\) et \(p_r\)).
 
 **Cas colinéaire** :
-   - Dans le cas où \N- p_k \N- se trouve sur la ligne passant par \N- p_i \N et \N- p_r \N-, les bissectrices \N- B_{i,r} \N et \N- B_{k,i} \N peuvent coïncider ou être parallèles, et les régions peuvent ne pas se chevaucher. Cela permet de traiter correctement le cas exceptionnel où l'intersection pourrait être vide, en s'alignant sur l'hypothèse selon laquelle \Np_k \Nne doit pas être sur la ligne passant par \Np_i \Net \Np_r \Npour que l'intersection soit garantie non vide.
+- Dans le cas où \(p_k\) se trouve sur la ligne passant par \(p_i\) et \(p_r\), les bissectrices \(B_{i,r}\) et \(B_{k,i}\) peuvent coïncider ou être parallèles, et les régions peuvent ne pas se chevaucher. Cela permet de traiter correctement le cas exceptionnel où l'intersection pourrait être vide, en s'alignant sur l'hypothèse selon laquelle \(p_k\) ne doit pas être sur la ligne passant par \(p_i\) et \(p_r\) pour que l'intersection soit garantie non vide.
+
 
 
 
