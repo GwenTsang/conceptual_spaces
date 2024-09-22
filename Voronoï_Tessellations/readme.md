@@ -14,7 +14,7 @@ Dans le code python proposé, nous employons une méthode "bricolée" qui consis
 Supposons que deux point p_i et p_r sont fixés dans un espace bidimensionnel. Soit R(p_i, p_r) la région contenant l'ensemble des points plus proches de p_i que de p_r et soit R(p_r, p_i) la région contenant l'ensemble des points plus proches de p_r que de p_i.
 Une amélioration des codes python présent consisterait à trouver une méthode algorithmique pour savoir, pour tout point p_k dans le même espace bidimensionnel, si :
 - R(p_k, p_i) est entièrement contenu dans R(p_r, p_i) et donc l'intersection de R(p_k, p_i) avec R(p_i, p_r) est vide.
-- L'intersection de R(p_k, p_i) avec R(p_i, p_r) n'est pas vide.
+- L'intersection de R(p_k, p_i) avec $R(p_i, p_r)$ n'est pas vide.
 
 Il semble intuitivement que tout point qui n'est pas sur la droite qui traverse p_i et p_r vérifie la seconde condition si l'on considère que l'espace bidimensionnel en question est infini.
 
@@ -48,3 +48,7 @@ Il semble intuitivement que tout point qui n'est pas sur la droite qui traverse 
 
 **Cas colinéaire** :
    - Dans le cas où \N- p_k \N- se trouve sur la ligne passant par \N- p_i \N et \N- p_r \N-, les bissectrices \N- B_{i,r} \N et \N- B_{k,i} \N peuvent coïncider ou être parallèles, et les régions peuvent ne pas se chevaucher. Cela permet de traiter correctement le cas exceptionnel où l'intersection pourrait être vide, en s'alignant sur l'hypothèse selon laquelle \Np_k \Nne doit pas être sur la ligne passant par \Np_i \Net \Np_r \Npour que l'intersection soit garantie non vide.
+
+
+
+
