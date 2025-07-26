@@ -1,0 +1,114 @@
+\documentclass[a4paper, 11pt]{article}
+
+% --- PAQUETS ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage[french]{babel}
+\usepackage[a4paper, landscape, margin=2cm]{geometry} % Passage en format paysage
+\usepackage{graphicx} % Nécessaire pour \scalebox
+\usepackage{tikz}
+\usepackage{amsmath} % Pour \mathbf et \mathbb
+
+% --- LIBRAIRIES TIKZ ---
+\usetikzlibrary{
+    positioning,        % Pour positionner les nœuds (below=of, etc.)
+    shapes.geometric,   % Pour les formes
+    arrows.meta,        % Pour personnaliser les flèches
+    fit,                % Pour ajuster des boîtes autour d'autres nœuds
+    calc,               % Pour les calculs de coordonnées
+    decorations.pathreplacing % Pour l'accolade
+}
+
+\begin{document}
+
+\begin{figure}[h!]
+\centering
+% On utilise \scalebox pour réduire la taille globale de 10%
+\scalebox{0.9}{% 
+\begin{tikzpicture}[
+    node distance=0.4cm and 1cm,
+    % --- STYLES ---
+    gen_block/.style={
+        rectangle, draw=black, fill=cyan!10,
+        text width=4cm, align=center, minimum height=1.2cm
+    },
+    final_img/.style={
+        rectangle, draw=black, fill=red!20,
+        text width=2.5cm, align=center, minimum height=2.2cm
+    },
+    group_box/.style={
+        draw, dashed, line width=1.5pt, inner sep=0.4cm
+    },
+    group_label/.style={
+        align=left, text width=3.5cm
+    },
+    injection_arrow/.style={
+        -{Stealth[length=2.5mm, width=2mm]}, thick, black
+    },
+    main_arrow/.style={
+        -{Stealth[length=3mm]}, thick, black
+    }
+]
+
+% --- TITRE ---
+\node[font=\Large\bfseries] (title) at (6, 2.5) {Injection du style par couche dans StyleGAN3};
+
+% --- BLOCS DE GÉNÉRATION ---
+\node[gen_block] (block1) at (0,0) {Bloc de génération \\ 4x4};
+\node[gen_block, below=of block1] (block2) {Bloc de génération \\ 8x8};
+\node[gen_block, below=of block2] (block3) {Bloc de génération \\ 16x16};
+
+\node[gen_block, below=1cm of block3] (block4) {Bloc de génération \\ 32x32};
+\node[gen_block, below=of block4] (block5) {Bloc de génération \\ 64x64};
+\node[gen_block, below=of block5] (block6) {Bloc de génération \\ 128x128};
+
+\node[gen_block, below=1cm of block6] (block7) {Bloc de génération \\ 256x256};
+\node[gen_block, below=of block7] (block8) {Bloc de génération \\ 512x512};
+\node[gen_block, below=of block8] (block9) {Bloc de génération \\ 1024x1024};
+
+% --- VECTEURS DE STYLE ---
+\path (block1.north) -- (block9.south) coordinate[midway] (blocks_mid_point);
+\node[font=\Large] (w_plus) at (blocks_mid_point -| -8.5, 0) {$\mathbf{w}^+$};
+
+\coordinate (brace_line) at (-6.5, 0);
+\draw[decorate, decoration={brace, amplitude=10pt, mirror}, thick]
+    (brace_line |- block1.north) -- (brace_line |- block9.south);
+\draw[main_arrow] (w_plus.east) -- (brace_line |- blocks_mid_point);
+
+\coordinate (w_label_x) at (-4.5, 0);
+\foreach \i in {1,...,9} {
+    \node (w\i) at (w_label_x |- block\i.center) {$\mathbf{w}_{\i}$};
+}
+
+\foreach \i in {1,...,9} {
+    \draw[injection_arrow] (w\i.east) -- (block\i.west);
+}
+
+% --- GROUPEMENTS ET SORTIE ---
+\node[final_img, right=8cm of block5] (final) {Image finale};
+
+\node[group_box, draw=red, fit=(block1)(block2)(block3)] (group1) {};
+\node[group_box, draw=orange, fit=(block4)(block5)(block6)] (group2) {};
+\node[group_box, draw=green!50!black, fit=(block7)(block8)(block9)] (group3) {};
+
+\node[group_label, anchor=north west] at ($(group1.north east) + (0.3, 0)$) {Couches haut niveau \\ (Forme, pose)};
+\node[group_label, anchor=west, name=label2] at ($(group2.east) + (0.3, 0)$) {Couches moyen niveau \\ (Parties du visage)};
+\node[group_label, anchor=north west] at ($(group3.north east) + (0.3, 0)$) {Couches bas niveau \\ (Texture, couleur)};
+
+\draw[main_arrow] (label2.east) -- (final.west);
+
+\end{tikzpicture}
+} % Fin du \scalebox
+
+\caption{
+    Schéma de l'injection de style par couche dans le générateur de StyleGAN.
+    Le vecteur de style étendu $\mathbf{w}^+ \in \mathbf{W}^+$ est décomposé (symbolisé par l'accolade) en sous-vecteurs $\mathbf{w}_i$. Chacun de ces sous-vecteurs est ensuite injecté en entrée du bloc de génération correspondant, comme l'illustrent les flèches horizontales.
+    \centering
+    \large $\mathbf{w}^+ = [\mathbf{w}_1, \mathbf{w}_2, \dots, \mathbf{w}_n] \quad \text{où} \quad \mathbf{w}_i \in \mathbb{R}^{512}$
+}
+\label{fig:stylegan_injection}
+\end{figure}
+
+\end{document}
