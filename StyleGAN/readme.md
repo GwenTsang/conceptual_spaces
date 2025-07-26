@@ -1,4 +1,3 @@
 ## L'Interprétabilité des dimensions dans StyleGAN
 
-StyleGAN est une architecture en GAN (_Generative Adversarial Network_). Nous allons montrer et expliquer en quoi, selon nous, cette architecture est assez prometteuse en ce qui concerne l’interprétabilité des espaces latents.
-
+StyleGAN is a GAN (_Generative Adversarial Network_) architecture. We will try to see here if this architecture is quite promising in terms of the interpretability of latent spaces.
