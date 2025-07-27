@@ -8,7 +8,7 @@ StyleGAN is a GAN (_Generative Adversarial Network_) architecture. We will try t
 
 [Shawky Sabae et al. (2022)](https://arxiv.org/pdf/2204.07924) see page 4
 
-[Closed-Form Factorization of Latent Semantics in GANs](https://arxiv.org/abs/2007.06600)
+[Closed-Form Factorization of Latent Semantics in GANs (2020)](https://arxiv.org/abs/2007.06600)
 
 ### Feature interpolation :
 
