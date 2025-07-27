@@ -1,8 +1,8 @@
 ## Disentanglement and Interpretability of StyleGAN
 
-StyleGAN is a GAN (_Generative Adversarial Network_) architecture. We will try to see here if this architecture is quite promising in terms of the interpretability of latent spaces.
+StyleGAN is a GAN (_Generative Adversarial Network_) architecture.
 
-A central question is how disentangled the semantic factors are in StyleGAN3’s latent spaces. Disentanglement here refers to the degree that individual latent coordinates or directions correspond to single interpretable attributes, without entangling multiple attributes. Recent work (Dinh et al., 2022) directly measured disentanglement in StyleGAN3 using the DCI metric (Disentanglement, Completeness, Informativeness)
+Disentanglement here refers to the degree that individual latent coordinates or directions correspond to single interpretable attributes, without entangling multiple attributes. Recent work (Dinh et al., 2022) directly measured disentanglement in StyleGAN3 using the DCI metric (Disentanglement, Completeness, Informativeness)
 
 
 ### Feature extraction :
