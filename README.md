@@ -2,7 +2,7 @@
 
 The works of Gärdenfors [(2000)](https://doi.org/10.7551/mitpress/2076.001.0001) and [(2014)](https://doi.org/10.7551/mitpress/9629.001.0001) provide a detailed introduction to conceptual space theory.
 
-A LaTeX version of my first chapter is available [at this link](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Chap_1.tex)
+A LaTeX version of my first chapter is available [at this link](https://github.com/ZygoOoade/conceptual_spaces/blob/main/chapter_1/chapter%20one%20-%20application%20of%20conceptual%20spaces%20to%20colours.tex)
 
 The file [Tesselations_Voronoi.ipynb](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Tesselations_Voronoi.ipynb) is used to illustrate the model proposed by [Douven (2013)](https://link.springer.com/article/10.1007/s10992-011-9216-0), and [Douven (2016)](https://doi.org/10.1016/j.cognition.2016.03.007). More detailed code is available on [this GitHub](https://github.com/IgorDouven/LearningConcepts/blob/main/learning_concepts.jl)
 
