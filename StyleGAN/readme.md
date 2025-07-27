@@ -4,9 +4,11 @@ StyleGAN is a GAN (_Generative Adversarial Network_) architecture. We will try t
 
 ### Feature extraction :
 
-https://arxiv.org/pdf/2204.07924
+[Nitzan et al. (2020) Face Identity Disentanglement via Latent Space Mapping](https://arxiv.org/abs/2005.07728)
 
-https://arxiv.org/abs/2007.06600
+[Shawky Sabae et al. (2022)](https://arxiv.org/pdf/2204.07924) see page 4
+
+[Closed-Form Factorization of Latent Semantics in GANs](https://arxiv.org/abs/2007.06600)
 
 ### Feature interpolation :
 
