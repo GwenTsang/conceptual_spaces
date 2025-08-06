@@ -1,0 +1,94 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb}
+\usepackage{amsthm}
+\usepackage[french]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+% Théorèmes et Définitions
+\newtheorem{definition}{Définition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{example}{Exemple}[section]
+
+% Commande pour la norme
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclareMathOperator{\argmin}{arg\,min}
+
+\begin{document}
+
+\section{Espaces métriques}
+
+\begin{definition}
+Un \textbf{espace métrique} est un couple $(E, d)$ où $E$ est un ensemble non vide et $d$ est une application, appelée \emph{distance} ou \emph{métrique},
+\[
+\mathcal{D} : E \times E \to \mathbb{R}^+
+\]
+telle que, pour tous $x, y, z \in E$, les propriétés suivantes sont vérifiées :
+\begin{enumerate}
+    \item \textbf{Séparation} : $\mathcal{D}(x, y) = 0 \iff x = y$ ;
+    \item \textbf{Symétrie} : $\mathcal{D}(x, y) = \mathcal{D}(y, x)$ ;
+    \item \textbf{Inégalité triangulaire} : $\mathcal{D}(x, z) \leq \mathcal{D}(x, y) + \mathcal{D}(y, z)$.
+\end{enumerate}
+\textit{Note : la positivité $\mathcal{D}(x,y) \ge 0$ est une conséquence des autres axiomes\footnote{En effet, $0 = \mathcal{D}(x,x) \le \mathcal{D}(x,y) + \mathcal{D}(y,x) = 2\mathcal{D}(x,y)$, donc $\mathcal{D}(x,y) \ge 0$.}}
+\end{definition}
+
+\section{Espaces vectoriels normés}
+
+\begin{definition}
+Soit $E$ un espace vectoriel sur le corps $\mathbb{K}$ ($\mathbb{R}$ ou $\mathbb{C}$). Une \textbf{norme} sur $E$ est une application
+\[
+\norm{\cdot} : E \to \mathbb{R}^+
+\]
+telle que, pour tous vecteurs $\mathbf{x}, \mathbf{y} \in E$ et tout $\lambda \in \mathbb{K}$, on a :
+\begin{enumerate}
+    \item \textbf{Séparation} : $\norm{\mathbf{x}} = 0 \iff \mathbf{x} = \mathbf{0}$ ;
+    \item \textbf{Homogénéité} : $\norm{\lambda \mathbf{x}} = |\lambda| \norm{\mathbf{x}}$ ;
+    \item \textbf{Inégalité triangulaire} (ou sous-additivité) : $\norm{\mathbf{x} + \mathbf{y}} \leq \norm{\mathbf{x}} + \norm{\mathbf{y}}$.
+\end{enumerate}
+Un espace vectoriel muni d'une norme est appelé un \textbf{espace vectoriel normé}.
+\end{definition}
+
+\begin{proposition}
+Soit $(E, \norm{\cdot})$ un espace vectoriel normé. $\mathcal{D}: E \times E \to \mathbb{R}^+$ définie par
+\[
+\mathcal{D}(\mathbf{x}, \mathbf{y}) = \norm{\mathbf{x} - \mathbf{y}}
+\]
+est une distance sur $E$. Ainsi, tout espace vectoriel normé est un espace métrique.
+\end{proposition}
+
+Donnons un exemple. Soit l'espace vectoriel $E = \mathbb{R}^d$. Pour un vecteur $\mathbf{x} = (x_1, \dots, x_d)$, la \textbf{norme euclidienne} (ou norme L2) est définie par :
+\[
+\norm{\mathbf{x}}_2 = \sqrt{\sum_{i=1}^{d} x_i^2}
+\]
+La distance induite par cette norme est la \textbf{distance euclidienne}, définie pour deux points $\mathbf{x}$ et $\mathbf{y}$ par :
+\[
+\mathcal{D}_E(\mathbf{x}, \mathbf{y}) = \norm{\mathbf{x} - \mathbf{y}}_2 = \sqrt{\sum_{i=1}^{d} (x_i - y_i)^2}
+\]
+
+On vérifie facilement qu’elle satisfait aux axiomes d’une métrique.
+\section{Mise en pratique computationnelle}
+
+Dans de nombreuses applications (classification, clustering), on doit résoudre :
+\[
+\argmin_{i \in \{1, \ldots, k\}} \mathcal{D}_E(\vect{x}, \vect{c}_i)
+\]
+où $\vect{x} \in \R^d$ est un point à classifier et $\{\vect{c}_1, \ldots, \vect{c}_k\}$ sont des points.
+
+On peut utiliser la distance euclidienne au carré, $\mathcal{D}_E^2$ car cela permet d'éviter l'opération \texttt{sqrt}. Le résultat est le même dans les deux cas : pour tout $a, b \in \R^+$ avec $a < b$, on a $a^2 < b^2$, on a :
+\[
+\argmin_{i \in \{1, \ldots, k\}} \mathcal{D}_E(\vect{x}, \vect{c}_i) = \argmin_{i \in \{1, \ldots, k\}} \mathcal{D}_E^2(\vect{x}, \vect{c}_i)
+\]
+
+
+En pratique, pour calculer $\mathcal{D}_E^2(\mathbf{x}, \mathbf{y}) = \norm{\mathbf{x} - \mathbf{y}}^2$, on utilise  l'identité remarquable issue du produit scalaire :
+\begin{align*}
+    \norm{\mathbf{x} - \mathbf{y}}^2 &= (\mathbf{x} - \mathbf{y}) \cdot (\mathbf{x} - \mathbf{y}) \\
+    &= \mathbf{x} \cdot \mathbf{x} - 2(\mathbf{x} \cdot \mathbf{y}) + \mathbf{y} \cdot \mathbf{y} \\
+    &= \norm{\mathbf{x}}^2 - 2(\mathbf{x} \cdot \mathbf{y}) + \norm{\mathbf{y}}^2
+\end{align*}
+En pratique, lorsqu'on fait un clustering ou un algorithme de classification en python, on peut alors calculer une seule fois $\norm{\mathbf{x}}^2$ et $\norm{\mathbf{y}}^2$ en stockant leurs valeurs, et faire une boucle \texttt{for} qui itère sur $\mathbf{x} \cdot \mathbf{p_i}$
+
+
+\end{document}
