@@ -6,5 +6,15 @@ The file [Tesselations_Voronoi.ipynb](https://github.com/ZygoOoade/conceptual_sp
 
 The file [Glove__sleep__DRM_visualisation.ipynb](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Glove__sleep__DRM_visualisation.ipynb) was a draft for modeling the DRM effect. It would be better to use more recent embeddings, and also to apply MDS rather than PCA.
 
+# TODO
+
+- Obtenir deux très bons plots pour la fonction d'appartenance gradée *continue* et la fonction d'appartenance gradée *discrète* . En produire un SVG. Puis, à partir de ce SVG, obtenir un LaTeX (avec dégradé de couleur pour la continuous membership function). Qui sera intégré dans la seconde moitié du Chapitre 1.
+- Décomposer en sous parties le code python "Corrélation positive entre la taille de la région prototypique et l'épaisseur de la zone de transition". Cette décomposition permettra d'y voir plus clair.
+- Une fois cette décomposition opérée, ajouter des détails formels sur cette corrélation : la démonstration de Douven pour le cas 1-dimensionnel et mes résultats en python pour le cas 2-dimensionnel.
+- Traduire mon document de l'anglais concernant les membership functions vers le français.
+
+
+- Rédiger une partie sur la possibilité d'améliorer les relations de distance dans StyleGAN3, de manière à optimiser l'équation `D(x,y) = Dissimilarité(x,y)` et de contribuer à en faire un espace conceptuel / un similarity space.
+
 # See also
 For more details, we refer to the Python implementation of the conceptual space theory developed by Bechberger [in his thesis](https://osnadocs.ub.uni-osnabrueck.de/handle/ds-2023120110100).
