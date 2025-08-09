@@ -2,7 +2,6 @@
 """
 approx_models.py
 
-A concise, robust script that:
  - Computes (or loads) a 2D membership grid for the two-segment geometry (deterministic quadrature or MC).
  - Collapses to 1D: mean_by_x and var_by_x (saved).
  - Fits Linear, Quadratic and PCHIP spline to mean_by_x.
@@ -10,11 +9,6 @@ A concise, robust script that:
  - Computes and prints metrics: MSE, RMSE, max_abs, R^2.
  - Saves plots and `results.npz`.
 
-Usage examples:
-  python approx_models.py --use_quadrature --quad_n 200
-  python approx_models.py --n_mc 30000
-
-This script is intentionally small and focused on the models you requested.
 """
 
 import os
@@ -318,3 +312,4 @@ if __name__ == '__main__':
     parser.add_argument('--save_dir', type=str, default='approx_results')
     args = parser.parse_args()
     main(args)
+
