@@ -858,18 +858,14 @@ V(S) = \{v(p_i) \mid p_i \in P\}
 
 La littérature sur les espaces conceptuels soulève souvent deux problèmes majeurs liés aux diagrammes de Voronoï classiques. Le premier problème tient à ce que les données expérimentales montrent que les prototypes ne sont pas des points \textit{ uniques} et \textit{précisément localisés}\footnote{Pour les catégories de couleurs, il est peu probable qu’un point unique représente idéalement toute la catégorie mieux que tous les autres. Par exemple, si une nuance prototypique $p_r$ du ROUGE est fixée, il semble qu'une nuance qui diffère très légèrement de $p_r$ a, elle aussi, un degré d'appartenance \textit{maximal} au rouge et pourrait donc, elle aussi, être prise comme point prototypique.}. Le second problème tient au fait que les cas-limites entre deux catégories n'ont aucun espace propre. En effet, en deux dimensions, les cas-limites sont identifiés aux points situés sur les \textit{arêtes} d'un pavage de Voronoï, mais ces arêtes n'ont \textit{aucune épaisseur}. C'est un problème car il semble y avoir \textit{beaucoup} de cas-limites entre deux couleurs. Bien qu'il semble s'agir de deux problèmes distincts, la modification des diagrammes de Voronoï classiques en diagrammes créés à partir de \textit{régions prototypiques} permet \textit{en théorie} de les résoudre tous les deux à la fois.
 
-\par
-
-Les \emph{régions prototypiques} permettent notamment de rendre compte de la \emph{flexibilité sémantique} d'un concept. Exprimons deux conditionnels mutuellement exclusifs qui mettent en évidence cette flexibilité. Prenons pour exemple la catégorie \textsc{rouge} en supposant qu'il existe deux points prototypiques avec des positions distinctes notés $p_{\text{rouge}_1}$ et $p_{\text{rouge}_2}$. On admet qu'on a $n$ autres points prototypiques qui sont fixés et qui correspondent à toutes les autres couleurs. Autrement dit, la catégorisation de $x$ dépend du choix du prototype, la catégorie correspondante a une certaine flexibilité sémantique dans la mesure où les deux choix sont possibles.
+\subsection*{1.5 Critiques et améliorations de la technique des diagrammes de Voronoï}
+\subsection*{1.5.1. Les régions prototypiques}
 
 \par
 Douven montre formellement, dans le cas unidimensionnel, que plus l'intervalle séparant deux prototypes d'une même catégorie s'allonge, plus la \emph{zone de flou} — c'est-à-dire l'ensemble des points dont l'appartenance catégorielle varie selon lequel des deux prototypes on prend — s'agrandit. Cette observation se transpose qualitativement en dimension supérieure : un élargissement de la dispersion des sites prototypiques le long d'une dimension $d$ accroît la taille de l'ensemble des points ambigus le long de $d$. En revanche, une démonstration rigoureuse en dimensions supérieures requiert des outils mathématiques avancés et dépasse le cadre de ce travail. Cette lecture conditionnelle des régions prototypiques fournit néanmoins une interprétation claire et opérationnelle de la flexibilité sémantique : l'étendue géométrique des régions prototypiques le long d'une dimension encode directement la marge d'indétermination liée à cette dimension.
 
 
 Dès son premier livre sur les espaces conceptuels, Gärdenfors était conscient qu’un unique prototype pouvait idéaliser l'homogénétité des catégories\footnote{Gärdenfors (2000, 4.3.3): "Although the match is still not perfect, I believe that if the generalized Voronoi model that is presented in section 4.9 is used as the appropriate geometrical model, most of the remaining misfit can be accounted for".} et a proposé des régions prototypiques circulaires pour définir des « pavages de Voronoï généralisés »\footnote{Gärdenfors (2000, 4.9) “One can indroduce the notion of a prototypical area and then determine a generalized Voronoi tessellation by computing distances from such areas instead. This idea is modeled by assuming that the prototypical area for a concept is described by a circle with centre p = $\langle p_1,... , p_n \rangle$ and radius $c_p$”. }. Sa représentation des régions prototypiques par des cercles a ensuite été améliorée par (Douven et al. 2011) dans un modèle plus souple mais plus complexe.
-
-\par
-Pour déterminer les nuances prototypiques de bleu à partir des résultats des tâches de  catégorisation \textit{binaire}, on peut procéder comme suit. Un nombre $n$ de participants a décrété  pour $k$ nuances si elle était \textit{bleue} ou \textit{non bleue}. S'il y a certaines nuances qui ont été considérées  comme bleues par tous les participants, elles doivent en principe être considérées dans la région prototypique du bleu. De manière plus générale, pour chacune des $k$ nuances, il y a un nombre  de participants entre 0 et $n$ qui l'a considérée comme \textsc{bleu}. Cela permet d'ordonner les $k$ nuances en fonction du nombre de participants qui ont voté \textsc{bleu}, et les nuances en haut de ce  classement sont considérées comme faisant partie de la région prototypique du \textsc{bleu}.
 
 \par
 Montrons que si l'on assigne au ROUGE deux prototypes différents, la catégorie du ROUGE gagne en flexibilité.
@@ -887,6 +883,21 @@ On obtient dès lors deux régions de Voronoi différentes pour la catégorie du
 \]}
 
 
+\subsection*{1.5.2. Quelle fonction utiliser pour modéliser la variation du degré d'appartenance ?}
+
+
+Menegaz et al. (2010) report that in a CIELAB color-naming experiment “the membership function for each category peaked in the center of the region and smoothly degraded towards the borders”. Menegaz et al. (2007) reported fuzzy membership regions in 3D CIELAB from Italian speakers.
+
+https://www.rit.edu/science/munsell-color-science-lab-educational-resources
+
+https://zenodo.org/records/4394536
+
+Benavente et al. (2003, 2008) modeled each color category as a fuzzy set with a characteristic membership function. Their early model used a “Sigmoid–Gaussian” shape: essentially a flat plateau around the prototype with sigmoid (S-shaped) or Gaussian fall‐offs at the edges. In more detail, each category’s membership was defined by combining logistic (“sigmoid”) functions in the two chromatic axes (a* and b* of CIELAB), producing an approximately triangular/trapezoidal plateau: a central zone of high membership, with smoothly sloping boundaries.
+
+\subsection*{1.6. Coller aux données empiriques sur la catégorisation des couleurs}
+
+\par
+Pour déterminer les nuances prototypiques de bleu à partir des résultats des tâches de  catégorisation \textit{binaire}, on peut procéder comme suit. Un nombre $n$ de participants a décrété  pour $k$ nuances si elle était \textit{bleue} ou \textit{non bleue}. S'il y a certaines nuances qui ont été considérées  comme bleues par tous les participants, elles doivent en principe être considérées dans la région prototypique du bleu. De manière plus générale, pour chacune des $k$ nuances, il y a un nombre  de participants entre 0 et $n$ qui l'a considérée comme \textsc{bleu}. Cela permet d'ordonner les $k$ nuances en fonction du nombre de participants qui ont voté \textsc{bleu}, et les nuances en haut de ce  classement sont considérées comme faisant partie de la région prototypique du \textsc{bleu}.
 
 
 
