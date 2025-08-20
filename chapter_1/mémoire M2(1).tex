@@ -1,0 +1,894 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{csquotes}
+\usepackage{newtxtext,newtxmath}
+\let\Bbbk\relax
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{stmaryrd}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage[top=3cm, bottom=3cm, left=3.5cm, right=3.5cm, footskip=1.3cm]{geometry}
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{References.bib}
+\usepackage[hang]{footmisc}
+\setlength{\skip\footins}{15pt}
+\usepackage{tabularx}        % Pour des tableaux à largeur de colonne flexible
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz-3dplot}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{footmisc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{ebgaramond}
+\usepackage{indentfirst}
+\usepackage{etoolbox}
+\makeatletter
+\preto\subsection{\@afterindenttrue}
+\preto\subsubsection{\@afterindenttrue}
+\makeatother
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt} % facultatif selon le style voulu
+
+\typeout{parindent=\the\parindent, parskip=\the\parskip}
+
+\newcommand{\fancychapter}[3]{%
+    \clearpage
+    \begin{tikzpicture}[remember picture, overlay]
+        
+        % --- NODE 1 ---
+        \node (maintitle) [
+            anchor=north east,
+            xshift=-12cm,
+            yshift=-3cm,
+            align=right
+        ] at (current page.north east)
+        {
+            \fontsize{40}{70}\selectfont
+            \fontfamily{EBGaramond-LF}\selectfont
+            \color{gray!60}
+            #1\hspace{0.33em}#2
+        };
+
+        % --- LIGNE DÉCORATIVE ---
+        \draw [
+            color=gray!60,
+            line width=0.4pt
+        ]
+        ([yshift=-0.2cm, xshift=-3cm]maintitle.south) 
+        -- 
+        ([yshift=-0.2cm, xshift=12cm]maintitle.south);
+
+
+        % NODE 2 
+        \node[
+            anchor=north,
+            yshift=-5.2cm
+        ] at (current page.north)
+        {
+            \parbox{1\textwidth}{
+                \fontsize{16}{28}\selectfont
+                \fontfamily{EBGaramond-LF}\selectfont
+                \color{black!80}
+                \hyphenpenalty=10000  % Interdit la césure
+                \sloppy              % Rend TeX plus tolérant sur l'espacement pour éviter les débordements
+                \centering
+                \textbf{#3}
+            }
+        };
+        
+    \end{tikzpicture}
+    \vspace*{3cm} 
+}
+
+\setlength{\footnotesep}{10pt}
+\titleformat{\section}[hang]{\normalfont\Large\bfseries}{\thesection}{1em}{}
+\titlespacing{\section}{2em}{*4}{*1}
+
+\newcommand{\bolditalic}[1]{\textbf{\textit{#1}}}
+\usepackage{caption}
+\captionsetup{labelformat=empty}
+\setlength{\parindent}{15pt}
+\linespread{1.5}
+
+\begin{document}
+
+\fancychapter{Chapitre}{1}{Application de la théorie des espaces conceptuels aux couleurs}
+
+\subsection*{1.1. De RGB à HSL}
+
+\hspace*{\parindent}Un espace colorimétrique est utilisé pour représenter l'organisation tridimensionnelle des couleurs. Les couleurs sont mappées le long d'axes qui représentent différentes propriétés. Un premier exemple est l'espace $\mathbf{RGB}$ dont les trois dimensions représentent respectivement le rouge, le vert et le bleu. Une nuance de couleur singulière est représentée dans $\mathbf{RGB}$ par un triplet\footnote{Cet espace est souvent utilisé en informatique, où la valeur du rouge, du vert et du bleu est encodée par un octet qui peut avoir 256 valeurs différentes.} $\left(x_1,x_2,x_3\right) \in \left(R \times G \times B\right)$ où $R \times G \times B = \llbracket 0 ; 255 \rrbracket \times \llbracket 0 ; 255 \rrbracket \times \llbracket 0 ; 255 \rrbracket \subset \mathbb{N}^3$. Intuitivement, ce triplet représente le niveau de rouge, de vert et de bleu dans la nuance de couleur singulière. Plus généralement, l'espace $\mathbf{RGB}$ modélise chaque nuance de couleur comme une combinaison additive de sa valeur sur les trois dimensions de rouge, vert et bleu. L'espace $\mathbf{RGB}$ peut être représenté par un cube, où chaque axe représente l'intensité des composantes : rouge, vert et bleu.
+
+Bien que l'espace \textbf{RGB} ait le mérite d'être simple, nous présenterons deux idées schématiques qui montrent qu'il n'est pas du tout adapté pour modéliser la vision humaine. Premièrement, puisque les dimensions de \textbf{RGB} sont chromatiques, le degré de luminosité doit être extrait des trois valeurs composants encodant la chromaticité. Cependant, pour modéliser le système visuel humain, il est plus approprié d'isoler un paramètre de luminosité des paramètres de chromaticité \parencite[p.78]{fairchild2013}. La deuxième critique concerne les couleurs opposées dans \textbf{RGB}. Lorsque l'espace \textbf{RGB} est représenté comme un cube, il apparaît que chaque sommet -- qui correspond intuitivement à une \og couleur pure \fg -- a un sommet opposé qui est également le plus éloigné sur le cube. En d'autres termes, les quatre diagonales joignant les quatre sommets opposés sur le cube indiquent les quatre paires de couleurs les plus éloignées (cf. Fig. 1a). Ainsi, l'une des lacunes du modèle \textbf{RGB} est que le sommet opposé à celui du ROUGE est celui correspondant au CYAN. Cependant, au cours des XIXe et XXe siècles, un certain nombre d'études empiriques et de théories\footnote{Basé sur des expériences psychophysiques, Hering (1834-1918) a soutenu que le rouge carmin est l'opposé du vert et que le bleu est l'opposé du jaune. Cette idée a donné naissance à la théorie des processus opposés, qui stipule schématiquement que certains stimuli verts et certains stimuli rouges génèrent des réponses neurobiologiques opposées (sur les 3 types de bâtonnets : L ; S ; M) ou même antagonistes (mutuellement incompatibles).} soutiennent l'idée que la couleur la plus opposée au ROUGE est le VERT, et non le CYAN comme c'est le cas dans \textbf{RGB}.
+
+\textcite[section 2.1]{gardenfors_2017} présente l'espace colorimétrique tridimensionnel \textbf{HSL}, comprenant les dimensions de teinte, de saturation et de luminosité. Ce modèle résout les deux problèmes précédemment soulevés : premièrement, il dissocie la dimension de luminosité des dimensions chromatiques, et deuxièmement, il sépare le ROUGE et le VERT sur l'axe de saturation aussi loin que possible (voir Fig. 1.b).
+
+\begin{figure}[h]
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[x={(0.5cm,-0.5cm)}, y={(1cm,0cm)}, z={(0cm,1cm)}]
+
+% Define the coordinates of the cube
+\coordinate (A) at (0,0,0);
+\coordinate (B) at (2,0,0);
+\coordinate (C) at (2,2,0);
+\coordinate (D) at (0,2,0);
+\coordinate (E) at (0,0,2);
+\coordinate (F) at (2,0,2);
+\coordinate (G) at (2,2,2);
+\coordinate (H) at (0,2,2);
+
+% Draw the back face
+\draw[thick] (D) -- (C) -- (B) -- (A) -- cycle;
+
+% Draw the front face
+\draw[thick] (E) -- (F) -- (G) -- (H) -- cycle;
+
+% Connect the front and back faces
+\draw[thick] (A) -- (E);
+\draw[thick] (B) -- (F);
+\draw[thick] (C) -- (G);
+\draw[thick] (D) -- (H);
+
+% Add colored circles with black outlines at the vertices
+\draw[black, fill=white] (A) circle (3pt);
+\draw[black, fill=red] (B) circle (3pt);
+\draw[black, fill=yellow] (C) circle (3pt);
+\draw[black, fill=green] (D) circle (3pt);
+\draw[black, fill=blue] (E) circle (3pt);
+\draw[black, fill=magenta] (F) circle (3pt);
+\draw[black, fill=black] (G) circle (3pt);
+\draw[black, fill=cyan] (H) circle (3pt);
+
+\end{tikzpicture}
+\caption{Figure 1a. \textbf{RGB} Space}  % Custom caption text
+\label{fig:rgb_cube}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\begin{tikzpicture}[scale=1.2]  % Adjust the scale factor as needed
+    % Set up a 3D coordinate system with more inclined viewing angles
+    \tdplotsetmaincoords{115}{15}  % Adjust elevation to 115° and azimuth to 15° (slight X-axis rotation)
+    \begin{scope}[tdplot_main_coords]
+
+        % Vertices for the upper and lower points of the tetrahedron
+        \coordinate (A) at (0,0,2);  % Top vertex (white)
+        \coordinate (F) at (0,0,-2); % Bottom vertex (black)
+
+        % Coordinates for the flat ellipse and colored points
+        \coordinate (B) at (1.5,0,0);   % Right point on the X-axis (magenta)
+        \coordinate (C) at (-1.5,0,0);  % Left point on the X-axis (green)
+        \coordinate (G) at (0,0,0);     % Center point (grey)
+
+        % Adjusted coordinates for yellow and blue points to lie on the ellipse
+        \coordinate (D) at (0,0.8,0);     % Front point on the ellipse (yellow)
+        \coordinate (E) at (0,-0.8,0);    % Back point on the ellipse (blue)
+
+        % Draw the ellipse (thin, flat in the XY plane)
+        \draw[thick] plot[smooth,domain=0:360]
+            ({1.5*cos(\x)}, {0.8*sin(\x)}, 0); % Ellipse with 1*sin(\x) for the Y component
+
+        % Draw the perpendicular diametric segments (X-axis and Z-axis)
+        \draw[thick] (B) -- (C);  % X-axis segment (green-magenta)
+        \draw[thick] (D) -- (E);  % Z-axis segment (yellow-blue)
+
+        % Draw the edges connecting the top and bottom vertices to the points on the ellipse
+        \draw[thick] (A) -- (B);
+        \draw[thick] (A) -- (C);
+        \draw[thick] (A) -- (D);
+        \draw[thick] (A) -- (E);
+        \draw[thick] (F) -- (B);
+        \draw[thick] (F) -- (C);
+        \draw[thick] (F) -- (D);
+        \draw[thick] (F) -- (E);
+
+        % Add the vertices as colored points
+        \filldraw[fill=white, draw=black] (A) circle (2pt);  % top vertex (white)
+        \filldraw[fill=black, draw=black] (F) circle (2pt);  % bottom vertex (black)
+        \filldraw[fill=magenta, draw=black] (B) circle (2pt);  % right (magenta)
+        \filldraw[fill=green, draw=black] (C) circle (2pt);  % left (green)
+        \filldraw[fill=yellow, draw=black] (D) circle (2pt);  % front (yellow)
+        \filldraw[fill=blue, draw=black] (E) circle (2pt);  % back (blue)
+        \filldraw[fill=gray, draw=black] (G) circle (2pt);  % center (grey)
+
+    \end{scope}
+\end{tikzpicture}
+\caption{Figure 1b. \textbf{HSL} Space}  % Custom caption text
+\label{fig:tetrahedron}
+\end{minipage}
+\end{figure}
+
+\subsection*{1.2. Partir des expériences psychophysiques sur la vision humaine}
+
+La \textit{Commission internationale de l'éclairage} (CIE) est l'institution en charge des normes pour la photométrie et la colorimétrie. En 1976, la CIE a recommandé l'utilisation de l'espace \textbf{CIELAB} pour représenter les couleurs vues sur papier ou textiles, et l'espace \textbf{CIELUV} pour représenter les couleurs perçues sur un écran. Depuis lors, l'espace \textbf{CIELAB} a été ajusté, corrigé et optimisé, ce qui est moins le cas avec \textbf{CIELUV}, dont l'utilisation a quelque peu diminué en faveur d'autres espaces
+\footnote{\textcite[pp.313-316]{fairchild2013}  passe en revue les conditions de plusieurs expériences dans lesquelles \textbf{CIELAB} a obtenu de meilleurs résultats que \textbf{CIELUV}. Entre autres, il cite une expérience utilisant des comparaisons par paires d'images imprimées dans laquelle les prédictions de \textbf{CIELAB} étaient significativement meilleures que celles de \textbf{CIELUV} (\textit{Ibid}, p.313).}. Pour mettre en place ces espaces colorimétriques et les opérations correspondantes, la CIE a d'abord dû définir certaines \textit{conditions de référence psychophysiques}. Ces conditions sont celles d'un « observateur standard » qui est utilisé pour \textit{standardiser} les différents résultats d'observations, c'est-à-dire pour les interpréter selon les mêmes normes méthodologiques. Par exemple, l'une des normes pour les tests colorimétriques est l'utilisation de l'illuminant D65, qui a été défini statistiquement à partir de nombreuses mesures de la lumière du jour (Fairchild, 2013, p.62). Dans « D65 », la majuscule « \textit{D} » indique qu'il s'agit d'une mesure de la lumière du jour (« Daylight ») et le nombre indique approximativement la température de couleur\footnote{La température de D65 est de 6504 Kelvin.}. L'illuminant D65 est un blanc légèrement froid qui correspond à peu près à la lumière du jour dans l'hémisphère nord, sous des ciels légèrement nuageux, entre 10h et 12h au printemps et en automne (Berns 2019, p.4; Hirsch, 2014, p.72). En plus de l'éclairage, les conditions de référence psychophysiques incluent également les modalités d'objet (par exemple, \textit{tissu, papier, écran}), la couleur de fond ou la taille du stimulus en degrés d'angle visuel\footnote{En 1995, la CIE a introduit une mesure de différence de couleur appelée « CIE94 », dont les conditions de référence incluent un fond uniforme avec un gris neutre (L = 50) et un angle visuel supérieur à 4°, ce qui correspond à peu près à la taille perçue d'un cercle de 3,5 cm de diamètre placé à 50 cm d'un observateur (Berns 2019, p.103; Fairchild 2013, p.83).}
+
+L'espace \textbf{CIELAB} est défini en trois dimensions $\langle L ; a ; b \rangle$. L'axe \textit{a} représente la saturation, l'axe \textit{b} représente la teinte et l'axe \textit{L} indique le degré de luminosité. Ainsi, bien que la structure des espaces \textbf{CIELAB} et \textbf{CIELUV} semble similaire\footnote{Sur les différences précises entre \textbf{CIELAB} et \textbf{CIELUV}, voir (Fairchild, 2013, p.211).} à celle de \textbf{HSL} (ils comprennent une dimension dédiée à la luminosité, et la teinte y est déterminée par rotation), contrairement à \textbf{HSL}, ces espaces s’appuient sur de nombreuses données psychophysiques concernant les jugements de similarité entre couleurs. Bien que l’espace \textbf{HSL} semble mieux représenter que \textbf{RVB} le système visuel humain, il n’est pas construit à partir de données empiriques concernant les jugements de similarité entre les couleurs.
+\par
+Les espaces \textbf{CIELAB} et \textbf{CIELUV} ont ouvert la voie à de nombreux \textit{Modèles d’Apparence des Couleurs} (MAC). Ces modèles cherchent à décrire mathématiquement le fonctionnement de la vision humaine des couleurs. Par exemple, l’espace \textbf{CIELAB} peut prédire le fait qu'une couleur, comme celle d'une pomme rouge, est perçue de manière \textit{constante} malgré les variations de source lumineuse, comme le soleil, un feu ou une ampoule électrique. Ce phénomène, appelé \textit{adaptation chromatique}, intégré à \textbf{CIELAB}, dérive d’une loi formulée en 1902 par le physiologiste allemand von Kries\footnote{L’idée de von Kries est que les trois types de cônes (\textit{L, M, S}) dans la rétine humaine ajustent leur sensibilité en fonction de la lumière ambiante. A la place de coder les signaux de ces cônes isolément, les lois de von Kries cherchent à tenir compte de l’intensité de la lumière ambiante dans la détermination de la chromaticité (Fairchild, 2013, sec. 9.1 ; Berns, 2019, p.22).}. Il existe aujourd’hui de nombreuses variantes, dont certaines visent à prendre en compte plus de facteurs pour mieux reproduire d’autres phénomènes de la perception visuelle humaine, tels que l’effet des zones adjacentes ou contours\footnote{Il est par exemple possible, dans le MAC \textbf{CIECAM02}, d’intégrer comme variable la luminosité du contour (surround) (Fairchild, 2013, p.289) ; c’est également possible dans le plus récent \textbf{CAM16}. }.
+\par
+La transformation des espaces \textbf{RVB} ou \textbf{HSL} à ces espaces est non linéaire\footnote{\textcite[p.43]{fairchild2013}: « CIELAB color space that are based on a cube-root compressive power-law nonlinearity ».}, cela signifie que la distance euclidienne entre deux points dans \textbf{RVB} ou \textbf{HSL} ne sera pas la même dans ces espaces. Imaginons par exemple qu’on pioche arbitrairement trois nuances de couleurs différentes dans \textbf{RVB}. Pour exemplifier cette non-linéarité, prenons $x$, $y$, $z \in$ \textbf{RVB}. trois triplets différents correspondant à trois nuances de couleurs.  Soit la fonction \(\mathcal{D}_E\colon\left(\mathbb{R}^3\right)^2\rightarrow\mathbb{R}^+\) permettant de mesurer la distance euclidienne entre deux vecteurs tridimensionnels \footnote{$\mathcal{D}_E(x,y)=\sqrt{\sum_{i=1}^{3}\left(x_i - y_i \right)^2}$}. Imaginons que la distance entre $x$ et $y$ (\textit{resp.} $z$) est $k$ fois plus petite (resp. grande) que la distance entre $x$ et $z$ (\textit{resp.} $z$), en d’autres termes $\exists k\in\mathbb{R}\ \ \ k\times\mathcal{D}_E\left(x,y\right)=\ \mathcal{D}_E\left(x,z\right)$. Soit la fonction $Conv : \textbf{RVB} \rightarrow \textbf{CIELAB}$ permettant de passer d'un code $\langle R ; V ; B \rangle$ à un code $\langle L ;a ; b\rangle$ l’un et l’autre renvoyant à \textit{la même couleur perçue}. Si donc on transforme les trois points $x$, $y$, $z \in$ \textbf{RVB} en trois points $x'$, $y'$, $z' \in \textbf{CIELAB}$, il est probable que la relation $k\times\mathcal{D}_E\left(x,y\right)=\ \mathcal{D}_E\left(x,z\right)$ ne soit pas préservée après cette conversion, c’est-à-dire que $k\times\mathcal{D}_E\left(x',y'\right)=\ \mathcal{D}_E\left(x',z'\right)$. Cela signifie plus généralement que si deux couleurs sont proches l'une de l'autre dans \textbf{RVB} ou  \textbf{HSL}, elles peuvent ne plus l'être dans un espace colorimétrique, et vice versa.
+\par
+Les parties suivantes visent à défendre l’idée que si on admet que la similarité (resp. dissimilarité) équivaut à la proximité (resp. distance) dans un espace, les points qui tombent sous la même catégorie doivent être représentés de manière \textit{groupée} plutôt que \textit{dispersée} dans cet espace. Une représentation "en bloc" des concepts de couleurs, où tous les points catégorisés comme $\mathcal{C}_i$ sont \textit{regroupés} dans l'espace psychologique, est plus conforme à nos intuitions sur les couleurs.
+
+\subsection*{1.3. 	Les propriétés des couleurs comme des régions dans l’espace colorimétrique.}
+\par
+Disposer d’un espace colorimétrique permet de \textit{le découper} pour représenter les différentes couleurs comme des \textit{régions} dans cet espace. Pour savoir si une nuance de couleur quelconque est rouge, il convient alors de déterminer un seuil inférieur et un seuil supérieur dans l’espace choisi pour déterminer la plage des nuances considérées comme rouges. Plus spatialement, cela consiste à délimiter une région correspondant au ROUGE. Cette région contient, entres autres, ECARLATE ou BORDEAUX comme sous-régions. Pour toute nuance singulière, pour décider s’il s’agit, ou non, d’une instance de rouge, il suffit de vérifier si le triplet correspondant $\langle x_1, x_2, x_3\rangle$ est à l’intérieur ou à l’extérieur de la région "ROUGE". 
+\par
+Cette idée consiste à définir \textit{en compréhension} une couleur $\mathcal{C}_i$ dans l’espace colorimétrique $\mathcal{U}$ en notant $\mathcal{C}_i=\left\{x\in\mathcal{U}\ |\ \varphi(x)\right\}$, qui se lit \og $\mathcal{C}_i$ est l’ensemble des $x$ dans $\mathcal{U}$ pour lesquels la formule $\varphi(x)$ est vraie. \fg Il est donc possible de définir une \textit{fonction indicatrice} associée à la couleur $\mathcal{C}_i$ qui renvoie 1 si l'élément appartient à la couleur, sinon 0. La fonction indicatrice décide, pour tout élément $x\in\mathcal{U}$, si $x\in\mathcal{C}_i$ ou si $x\in\mathcal{U}\setminus\mathcal{C}_i$. En d’autres termes, en prenant n’importe quel élément de $\mathcal{U}$, cette fonction renvoie 1 pour dire "Oui, $x$ est dans $\mathcal{C}_i$" ou bien renvoie 0 pour dire "Non, $x$ est hors de $\mathcal{C}_i$". Cette fonction, notée $\chi_{\mathcal{C}_i} : \mathcal{U} \rightarrow \left\{0, 1\right\}$, \textit{situe} l’élément $x$, ou bien dans $\mathcal{C}_i$, ou bien dans $\mathcal{U} \setminus \mathcal{C}_i$, le complémentaire de $\mathcal{C}_i$ dans $\mathcal{U}$ :
+\vspace{-0.5em}
+\[
+\chi_{\mathcal{C}_i}(x) =
+\left\{
+\begin{array}{ll}
+1, & \text{si } \varphi(x), \quad \text{alors } x \in \mathcal{C}_i \\
+0, & \text{si } \neg\varphi(x), \quad \text{alors } x \in \mathcal{U} \setminus \mathcal{C}_i
+\end{array}
+\right.
+\]
+Ce genre de définition de $\mathcal{C}_i$ le sépare \textit{partes extra partes} de $\mathcal{U}\setminus\mathcal{C}_i$. Or, intuitivement, il existe des nuances \textit{entre deux}, au bord des frontières d’une région correspondant à une couleur. Une fonction d’appartenance \textit{tout ou rien}, c’est-à-dire \textit{binaire} ne permet pas de rendre compte du statut de ces \textit{cas-limites} : un rouge qui tire vers l’orange n’est pas comme n’importe quel autre rouge, il n’est pas rouge au même \textit{degré}\footnote{Kleiber (2007, p.12) : \og L’existence de nombreux adjectifs de couleur composés tels que rouge vif, jaune pâle, vert pomme, etc. serait, selon Noailly, la preuve linguistique d’une gradation à l’intérieur d’une catégorie chromatique, puisqu’il revient à ces adjectifs de discriminer entre le plus ou le moins bleu, le plus ou le moins jaune. Et, pour Van de Velde, ce sont les dérivés adjectivaux tels que blanchâtre, rougeâtre, etc. (…) qui indiquent la possession, à un faible degré d’intensité, d’une couleur déterminée (…) \fg.}. Dans le langage naturel, des locutions et adverbes comme \og très \fg, \og un peu \fg, \og presque \fg, \og complètement \fg, « proche de \fg, sont utilisés pour exprimer ces degrés d’appartenance.
+\par 
+A la différence d’une fonction d’appartenance bivalente, où un changement infime dans l’argument $x$ peut produire un renversement complet du degré d’appartenance, le problème consiste donc dès lors à déterminer une formule générale permettant de calculer, pour tout $x$, à quel degré $x$ est $\mathcal{C}_i$.
+
+\subsection*{\hspace{1em}1.4.\hspace{1em}Représentation de la catégorisation d’une couleur : de la similarité aux prototypes}
+
+\subsubsection*{\hspace{1em}1.4.1.\hspace{1em}La corrélation entre le degré de similarité de deux couleurs et la probabilité qu'elles soient classées dans la même catégorie}
+
+La procédure employée par Ekman (1954) est directe et simple. Il part de $n$ couleurs différentes et veut obtenir une matrice de similarité de dimension $n\times n$. Celle-ci prend la forme d’un tableau dans lequel la cellule, où la colonne $i$ et la ligne $j$ se croisent, contient le degré de similarité des couleurs $i$ et $j$. Le protocole pour obtenir cette matrice de similarité consiste à demander aux sujets un jugement de similarité subjectif entre toutes les paires possibles avec les $n$ couleurs. Ainsi, chaque participant évalue la similarité entre $\frac{n\times\left(n-1\right)}{2}$ paires de couleurs différentes sur une échelle de 0 à 4. Ces jugements de similarité permettent, pour toute couleur $\mathcal{C}_i\in\left\{\mathcal{C}_1,\ldots,\mathcal{C}_n\right\}$ de classer par ordre décroissant de similarité les autres couleurs. Soit ${\mathcal{C'}}_1\in\left\{\mathcal{C}_1,\ldots,\mathcal{C}_n\right\}\setminus\left\{\mathcal{C}_i\right\}$ la couleur la plus similaire à $\mathcal{C}_i$, et supposons que la deuxième couleur la plus similaire à $\mathcal{C}_i$ est notée ${\mathcal{C'}}_2$ et ainsi de suite jusqu’à ${\mathcal{C'}}_{n-1}$, la couleur la moins similaire à $\mathcal{C}_i$. Cette mise en ordre est donc telle que $\forall k\in\llbracket 1 ; n-1 \rrbracket$ la couleur $\mathcal{C'}_k$ est moins similaire à $\mathcal{C}_i$ que $\mathcal{C'}_{k-1}$ mais en est plus similaire que $\mathcal{C'}_{k+1}$. Imaginez que vous n’avez \textit{jamais vu} la couleur $\mathcal{C}_i$ et que vous \textit{ignorez} à quelle catégorie elle appartient, mais que vous connaissez les catégories assignées à toutes les autres couleurs $\mathcal{C}_1,\ldots,\mathcal{C}_n$. Utilisez maintenant vos intuitions sur la question suivante : avec quelle couleur parmi  $\mathcal{C'}_1,\ldots,\mathcal{C'}_n$ la couleur $\mathcal{C'}_i$ est-elle la plus susceptible d’appartenir à la même catégorie sachant que $Sim(\mathcal{C}_i, \mathcal{C'}_1)>\ldots>Sim(\mathcal{C}_i, \mathcal{C'}_{n-1})$ ? Pour répondre à cette question, il faut imaginer que tout ce que nous savons des couleurs est d’une part les catégories attachées aux nuances de couleur $\mathcal{C'}_1,\ldots,\mathcal{C'}_{n-1}$ et d’autre part que $\mathcal{C'}_1,\ldots,\mathcal{C'}_{n-1}$ sont triées par ordre de similarité par rapport à $\mathcal{C}_i$. Cette question invite à s’appuyer sur l’hypothèse théorique selon laquelle si une couleur $x$ est plus similaire à une couleur $y$ qu’à une couleur $z$, alors il est plus probable que $x$ soit de la même catégorie que $y$, qu’elle soit de la même catégorie que $z$. En l’occurrence, puisque la couleur la plus similaire à $\mathcal{C}_i$ est $\mathcal{C'}_1$, la probabilité que $\mathcal{C}_i$ partage la même catégorie que $\mathcal{C'}_1$ est \textit{a priori} supérieure ou égale à la probabilité que $\mathcal{C}_i$ partage la même catégorie que $\mathcal{C'}_k$ pour tout $k\in\llbracket 2 ; n-1 \rrbracket$. Suivant cette même hypothèse, la probabilité que $\mathcal{C}_i$ partage la même catégorie que $\mathcal{C'}_{n-1}$, qui est la nuance de couleur qui lui est le plus dissimilaire, est la moins élevée, l’idée étant que ces probabilités diminuent de manière monotone de $\mathcal{C'}_1$ à $\mathcal{C'}_{n-1}$. Faire comme si on ne connaissait rien d’autre sur la catégorie qu’un petit nombre d’exemplaire implique de prendre ces exemplaires comme \og points de références \fg de ces catégories, en ce sens que c’est à partir de ceci que le jugement de similarité sera opéré.
+
+\subsubsection*{1.4.2.\quad Représenter la similarité (\textit{resp}. dissimilarité) par la proximité (\textit{resp}. distance)}
+
+L’une des idées qui traverse les travaux de Shepard\footnote{Shepard applique cette idée à d'autres stimulus que les couleurs comme les consonnes de sa langue maternelle ou les intervalles musicaux (1974).} est que la dissimilarité entre deux stimuli est représentable par leur distance dans un espace psychologique. Ainsi \textcite[]{shepard_1962} propose d’appliquer une technique de réduction de la dimensionnalité appelé \textit{multidimensional scaling} (\textit{MDS}) sur les données d’Ekman (1954) concernant les jugements de similarité entre couleurs. L'objectif du MDS est de réduire la complexité des données en minimisant la perte d'information et en conservant les relations de similarité entre les éléments. Les résultats du MDS indiquent qu'il existe deux dimensions optimales \footnote{L’optimalité de la dimensionnalité est mesurée par la fonction de coût du MDS, appelée "Stress" (cf. Appendice 1.3). \textcite[p.66]{borg_Groenen_2005} appliquent un MDS sur la matrice de similarité utilisée par Shepard et obtiennent que "Measured in terms of Stress, the badness-of-fit of the 1D, 2D, and 3D solutions is 0.272, 0.023, and 0.018, respectively. (…) The 1D solution has high Stress, and adding one additional dimension leads to a major Stress reduction. Adding yet another dimension has very little further effect and, indeed, cannot have much of an effect because the 0.023 for the 2D solution is so close to zero already".} pour représenter ces données de similarité, en excluant le paramètre de luminosité. Ce résultat suggère que deux paramètres suffisent pour modéliser au mieux les variations de la chromaticité dans l’espace des couleurs représentées par les humains (Kistler, 2016, p.139). Il est possible de prendre cet espace pour expliquer les jugements de similarité : lorsqu’on juge du degré de similarité entre deux couleurs, on calculerait la \textit{distance} entre les points correspondant à ces deux couleurs dans un espace déterminé. L’idée de Shepard est que la similarité entre deux stimulus (\textit{e.g.} deux couleurs) est représentable par une fonction monotone décroissante de leur distance dans cet espace psychologique. Cela signifie que si deux couleurs $A$ et $B$ sont jugées plus semblables que deux couleurs $C$ et $D$, alors la distance dans l’espace psychologique entre $A$ et $B$ est plus petite que la distance entre les couleurs $C$ et $D$\footnote{Formellement : $\left[ \text{Sim}(A,B) > \text{Sim}(C,D) \right] \Rightarrow \left[ \mathcal{D}(A,B) < \mathcal{D}(C,D) \right]$}.
+
+\subsubsection*{1.4.3.\quad La catégorisation dans la théorie des exemplaires}
+
+Comme évoqué, lorsqu’on doit catégoriser un élément inconnu, il est intuitif de chercher parmi les éléments que nous connaissons déjà ceux qui sont les plus similaires, et d'attribuer à l'élément inconnu la même catégorie (\textit{cf} 1.4.1). La théorie des exemplaires s’appuie sur deux idées essentielles. La première est que nous conservons en mémoire tous les exemples rencontrés pour chaque catégorie donnée. La deuxième est que, lorsqu’on doit catégoriser un nouvel élément, on le compare aux différents exemplaires stockés en mémoire et en le rattachant à la catégorie dont les exemplaires lui ressemblent le plus.
+\par
+Sur ce principe, la théorie des exemplaires permet de rendre compte du fait qu'au sein d'une même catégorie de couleur, certaines nuances sont considérées comme plus représentatives que d'autres. Une nuance de couleur sera très représentative d’une catégorie si elle est très similaire à de nombreuses nuances au sein de cette même catégorie. Plus formellement, si une catégorie $\mathcal{C}$ est définie en extension par un ensemble d'exemplaires connus $\{x_1, \ldots, x_n\}$, alors la représentativité d'une nuance particulière $x_k$ (avec $1 \leq k \leq n$) pour la catégorie $\mathcal{C}$ est mesurée par la moyenne de ses scores de similarité avec les $n-1$ autres nuances de $\mathcal{C}$. Plus un élément ressemble aux exemplaires d'une catégorie donnée, plus il sera associé à cette catégorie et considéré comme représentatif de celle-ci. Par exemple, si une nuance est proche du BLEU et du VERT, mais qu’elle est catégorisée comme BLEU, cela signifie qu’elle est plus représentative du BLEU que de VERT, et cela implique qu’elle partage en moyenne plus de similarité avec les nuances de BLEU qu’avec celles de VERT. Ainsi, la théorie de la catégorisation par les exemplaires prédit que la probabilité pour qu'une nuance $x$ soit assignée à la catégorie $\mathcal{C}$ est d’autant plus grande, qu’il y a beaucoup de nuances dans $\mathcal{C}$ qui sont similaires à $x$.
+\par
+Cette idée est opérationnalisée par l’algorithme des $k$ plus proches voisins : la catégorie d’un élément $x$ est déterminée par la catégorie majoritaire parmi ses $k$ plus proches voisins. La méthode des $k$ plus proches voisins consiste à calculer les distances entre un élément à classer et les exemples déjà connus. Pour déterminer l’étiquette de $x$, il s’agit donc de trouver les $k$ points dans l’espace colorimétrique qui en sont le plus proche (Douven 2023, p.6).
+\par
+Le coût cognitif de la technique des $k$ plus proche voisins est d’autant plus important que $k$ -- le nombre d’exemplaires à prendre en compte dans la catégorisation -- est grand. D’où on peut se demander pourquoi ne pas se contenter \textit{d’un seul plus proche voisin}, afin de minimiser le coût de la catégorisation ? Pourquoi ne pas baser la catégorisation d'un élément x uniquement sur son voisin le plus proche en fixant $k=1$ afin d’avoir un modèle de la catégorisation plus économe en ressources ? Cela peut conduire à des erreurs de catégorisation si le plus proche voisin est un \textit{cas isolé}, atypique et marginal. Même si le plus proche voisin d'un élément $x$ inconnu appartient à une classe donnée, il est possible que la majorité de ses autres voisins proches appartiennent à une classe différente. Se fier exclusivement au plus proche voisin pour catégoriser $x$ serait alors peu fiable. Pour obtenir une classification plus robuste, une stratégie fréquente consiste à augmenter le nombre $k$ d’exemples pris en compte, quitte à accroître le coût cognitif de chaque catégorisation.
+\par
+Nous soutenons qu’il est possible de réduire la valeur de $k$ en imposant des contraintes sur les exemplaires et/ou sur l’organisation des catégories. En ce sens, dans la partie suivante, on propose un modèle de catégorisation ne prenant en compte qu'un seul plus proche voisin ($k=1$). En effet, dans ce modèle, un seul plus proche voisin est cherché, et il n’existe qu’un seul exemplaire par catégorie. Un modèle de catégorisation basé sur \textit{un seul} plus proche voisin n’est viable qu’à condition d’imposer des contraintes sur \textit{l’organisation} des catégories dans l’espace colorimétrique. Avant de présenter en détail ce modèle, il est important de justifier \textit{pourquoi} imposer des contraintes sur l'organisation des catégories de couleurs. Les deux hypothèses suivantes donnent un aperçu bref et partiel des justifications qu’il y a à imposer ces contraintes sur l’organisation des catégories des couleurs :
+
+\begin{enumerate}[label=(\roman*)]
+    \item Chaque couleur regroupe des nuances perceptuellement similaires,
+    \item La catégorisation des couleurs doit être rapide et/ou peu coûteuse.
+\end{enumerate}
+
+Il est possible de rendre compte de ces deux hypothèses en admettant que les catégories des couleurs sont \bolditalic{optimalement organisées} dans l'espace colorimétrique. Cet espace serait organisé de manière à minimiser la similarité entre différentes catégories et à maximiser la similarité au sein d'une même catégorie\footnote{Ces contraintes sont exposées dans (Douven et Gärdenfors 2020). En principe, si on enlève toutes les étiquettes des exemplaires et qu’on partitionne à nouveau l'espace selon ces contraintes, on devrait re-obtenir presque les mêmes clusters (catégories) (Douven 2023) Un exemple de technique de partition optimale est l’algorithme des $k$ moyennes, qui consiste à minimiser la distance entre les points d’un même cluster. Détails dans l’appendice (1.1)}. Cette hypothèse d’optimalité explique pourquoi, étant donné la contrainte de rapidité et d’économie énoncée dans l’hypothèse \textit{(ii)}, la propriété décrite par l’hypothèse \textit{(i)} -- l’existence d’une forte similarité perceptuelle au sein des catégories -- a émergé. En d’autres termes, si l’organisation des catégories n’était pas optimale, cela entraînerait une catégorisation plus lente et plus coûteuse, ainsi que la présence de nuances perceptuellement hétérogènes au sein d’une même catégorie, ce qui contredirait les deux hypothèses \textit{(i)} et \textit{(ii)}.
+
+\subsubsection*{1.4.4. 	La catégorisation dans la théorie du prototype.}
+
+L’hypothèse que la cohérence interne des catégories est \textit{forte}, c’est-à-dire qu’elles regroupent des éléments \textit{homogènes}, permet une catégorisation fluide et économique grâce à la constitution d’un prototype distinctif. Ainsi l’hypothèse d'optimalité permet de \textit{synthétiser} tous les exemplaires d'une même catégorie en un seul exemplaire appelé \textit{prototype}. Cette théorie offre un modèle plus économique de la catégorisation en assignant à chaque catégorie un unique prototype. L’existence d’un prototype pour chaque catégorie permet de penser la catégorisation de manière \textit{plus simple} et \textit{moins coûteuse} que la manière par laquelle elle est pensée dans le modèle de la théorie des exemplaires exposée précédemment (1.4.3). En effet, plutôt que d’utiliser \textit{tous les exemplaires connus} dans la catégorisation, ne seraient utilisées que les coordonnées des points prototypiques, qui sont les plus représentatifs de chaque catégorie (Rosch 1978).
+\par
+Un prototype peut être vu comme l’instance qui représente le mieux la catégorie. De manière concrète, lorsqu’un enfant apprend à identifier une nouvelle couleur, le premier exemplaire qu’on lui montre devient son premier point de référence. Au fil du temps, au fur et à mesure qu'il sera exposé à d’autres variantes de cette couleur, ce point de référence est affiné et ajusté.
+\par
+Dans l’espace colorimétrique, le prototype est un point dont la position est parfois définie comme la moyenne de la position de tous les exemplaires de la catégorie\footnote{Gärdenfors (2014, sec. 2.7) "the position of the point representing the prototype is defined to be the mean of the positions for all the exemplars". Le prototype est calculé en divisant la somme des valeurs pour chaque dimension par le nombre total d'exemples dans ce groupe. Formellement, si $|\mathcal{C}_i|$ note le nombre d'exemplaires de la catégorie $\mathcal{C}_i$, le prototype est donné par $\frac{1}{|C_i|} \sum_{x_k \in C_i} x_k$ (Douven 2023, p.6).}. Pour Gärdenfors, lorsque l’on dit qu’une nuance de couleur $x$ est \og plus rouge \fg qu’une nuance de couleur $y$, c’est équivalent à dire que $x$ est plus proche du prototype du ROUGE que $y$\footnote{Gärdenfors (2014, sec.7.1).}. Plus généralement, plus un point est proche du prototype du ROUGE, plus il correspond à une nuance \textit{représentative} de cette catégorie.
+\par
+Pour catégoriser une nuance de couleur selon la théorie du prototype, il suffit de mesurer sa distance avec les prototypes de chaque catégorie plutôt que de calculer sa similarité avec tous les membres de toutes les catégories. Contrairement aux théories de la catégorisation basées sur les exemplaires, dans la théorie du prototype, le plus proche voisin d’un élément $x$ inconnu n’est jamais une exception ou une valeur marginale, mais sera toujours un prototype maximalement représentatif de sa catégorie. Un élément est considéré comme appartenant à une catégorie si sa distance avec le prototype de cette catégorie est inférieure à sa distance avec tous les autres prototypes de toutes les autres catégories\footnote{Gärdenfors (2000, pp.92-97 ; sec.4.9) : \og An object represented as a vector $x_i$ in a conceptual space belongs to the category for which the corresponding prototypical circle is the closest \fg Voir aussi (Douven, 2016).}. 
+
+\paragraph{1.4.4-a Propriétés géométriques des régions représentant les catégories de couleurs}\mbox{}
+
+Supposons que la représentativité d’une nuance pour une couleur $\mathcal{C}$ soit calculable par une fonction prenant toutes les valeurs réelles entre 0 et 1 notée $M_\mathcal{C}: U \rightarrow [0;1]$. Le domaine $\mathcal{U}$ sur lequel cette fonction est définie correspond à un espace colorimétrique où la distance entre deux points correspond à la dissimilarité perçue entre les deux nuances représentées par ces points. Si cette fonction attribue une valeur $k$ à un point $x$ (c’est-à-dire $M_\mathcal{C}(x)=k$), cela signifie intuitivement que $x$ est représentatif de la couleur $\mathcal{C}$ avec un degré $k$. Tous les exemplaires de la couleur $\mathcal{C}$ ont une valeur de représentativité non nulle ($M_\mathcal{C}(x)>0$), tandis que toutes les nuances $x$ n’ayant pas la couleur $\mathcal{C}$ ont une valeur de représentativité égale à zéro ($M_\mathcal{C}(x)=0$). Les éléments de la catégorie $\mathcal{C}$ sont donc représentés par l’ensemble des $x$ tels que $x\in\mathcal{U}$ et $M_\mathcal{C}(x)>0$. De plus, par définition, si $p$ note le prototype de $\mathcal{C}$, il prend la valeur maximale de l'intervalle puisqu'il est maximalement représentatif de la catégorie ($M_\mathcal{C}(x)=1$).
+\par
+Plusieurs études empiriques\footnote{Hampton et al. (2005) mènent une expérience sur la frontière entre le BLEU et le VIOLET. Ils écrivent que la contrainte d'ordre a été respectée dans 5992 essais sur 6000 : "In Experiments 2 and 3, only eight such non-monotonic responses occurred, out of almost 6000 opportunities".} suggèrent que les extensions des catégories de couleurs satisfont une propriété qui indique qu’elles correspondent à des régions n’ayant pas aucune \textit{discontinuité}, aucun \textit{trous}. Cette propriété s’énonce intuitivement comme suit : si un sujet juge qu’une nuance $x$ est ROUGE, alors toutes les nuances $y$ situées entre $x$ et le prototype du ROUGE seront également jugées comme étant ROUGE à un degré au moins égal à celui de $x$. Plus généralement, si $x$ appartient à la catégorie $\mathcal{C}$ et que $p$ en est maximalement représentatif, alors tous les mélanges intermédiaires entre $x$ et $p$ seront aussi dans $\mathcal{C}$. Dans des termes plus formels : si \( p \) est le prototype de la catégorie \( \mathcal{C} \), pour tout \( x \in \mathcal{C} \), toutes les nuances \( y \) sur le segment \([p,x]\) satisferont l’inégalité : 
+\[
+0 < M_{\mathcal{C}}(x) \leq M_{\mathcal{C}}(y) \leq 1.
+\] 
+Puisque \( y \) satisfait \( M_{\mathcal{C}}(y) > 0 \), la nuance représentée par ce point est dans la catégorie \( \mathcal{C} \). Cette propriété peut être exprimée formellement comme suit :
+\[
+\forall x \in U, \ M_{\mathcal{C}}(x) > 0 \implies \forall \lambda \in \left[0,1\right], \ M_{\mathcal{C}}(\lambda x + (1 - \lambda)p) > 0.
+\]
+Une région qui satisfait cette propriété est dite étoilée par rapport au prototype $p$\footnote{On peut l'exprimer en écrivant que le degré d'appartenance à la catégorie \(\mathcal{C}\) est une fonction monotone de la distance dans la direction spécifique du segment \([p,x]\) :
+\vspace{-0.5em}
+\begin{equation*}
+\forall x \in \mathcal{C}, \forall \lambda, \lambda' \in \left[0,1\right]^2, (\lambda < \lambda') \Rightarrow \left[ M_{\mathcal{C}}(\lambda' x + (1 - \lambda') p) \leq M_{\mathcal{C}}(\lambda x + (1 - \lambda) p) \right]
+\end{equation*}
+\vspace{-0.5em}
+\noindent Une formule équivalente est donnée en utilisant le prédicat \(Btw(x, y, z)\) signifiant que \(y\) est entre \(x\) et \(z\) :
+\vspace{-0.5em}
+\begin{equation*}
+\forall z, y, x \in \mathcal{C}, \left[ Btw(p, y, x) \land Btw(p, z, y) \right] \Rightarrow M_{\mathcal{C}}(z) \leq M_{\mathcal{C}}(y) \leq M_{\mathcal{C}}(x)
+\end{equation*}
+\vspace{-1em}
+} et toute région étoilée ne contient \textit{aucun trou}\footnote{Douven (2013, p.140) : "A region R is said to be connected iff, for all points \(p_i\)  and \(p_j\) in R, there is a curve [a path] connecting \(p_i\)  and \(p_j\) such that the curve [the path] lies entirely in R".}. En effet, un trou devrait être un point \( t \) satisfaisant \( M_{\mathcal{C}}(t)=0 \) qui se trouve entre \( p \) et un autre point \( x \) tel que \( M_{\mathcal{C}}(x)>0 \), ce qui est impossible car, si $\mathcal{C}$ est étoilé par rapport à $p$, \( M_{\mathcal{C}} \) est strictement positif sur tout le segment \(\left[p;x\right]\).
+\par
+	Dire qu’une région est étoilée par rapport à l’ensemble de ses points revient à dire que pour toute paire de points $x$ et $z$ dans $\mathcal{C}$, tous les points $y$ sur le segment reliant $x$ à $z$ sont également dans $\mathcal{C}$. Dans des termes plus concrets, si $x$ et $y$ sont deux nuances de ROUGE, alors toutes les nuances intermédiaires entre $x$ et $y$ seront également ROUGE. Selon Gärdenfors, toutes les catégories des couleurs doivent être représentées par des régions qui vérifient ce principe de \bolditalic{convexité géométrique}, qui est plus exigeant que le précédent\footnote{Un ensemble est convexe s'il est étoilé par rapport à \textit{tous} ses points, ainsi, un ensemble étoilé par rapport à \textit{un} point n’est pas nécessairement convexe.}. Le fait d'imposer cette convexité à \textit{toutes les régions} d'un même espace colorimétrique a une conséquence sur la \textit{forme} des frontières entre ces régions. En effet, si la frontière entre deux régions $A$ et $B$ présente une courbure, alors au moins l'une des deux régions $A$ ou $B$ n’est \textit{pas convexe}\footnote{ \og courbé\fg est ici équivalent à \og non-rectiligne \fg}. Sous cette contrainte de convexité géométrique, la seule façon de séparer deux régions adjacentes est d’utiliser comme frontières des \textit{segments de droite}. Une technique géométrique permettant de délimiter de telles frontières, tout en respectant les hypothèses de \textit{convexité géométrique}, d’\textit{existence des prototypes}, et d’\textit{organisation optimale} des catégories de couleurs est mise en œuvre dans la partie suivante.
+
+\paragraph{1.4.4-b Le pavage de l’espace colorimétrique}\mbox{} 
+
+ La théorie du prototype, fondée sur l’homogénéité au sein des catégories, trouve un parallèle géométrique dans les pavages de Voronoï, où la notion de similarité entre deux nuances est interprétée comme la proximité entre deux points. Tout comme dans la théorie du prototype, où une nuance de couleur est attribuée à une catégorie si elle est plus similaire à son prototype qu’à tout autre, dans les pavages de Voronoï, un point est défini comme appartenant à une région s’il est plus proche de son prototype que de tout autre prototype. Cette interprétation géométrique de la théorie du prototype, où il s’agit de trouver le point prototypique le plus proche de tout élément \( x \) à catégoriser, permet de paver l’espace colorimétrique en régions de Voronoï qui correspondent aux extensions des différentes couleurs.
+
+
+La section suivante montre comment délimiter géométriquement l’extension d’une catégorie de couleur, en prenant l’exemple de la catégorie ROUGE dans un espace colorimétrique bidimensionnel\footnote{Toutes les constructions proposées dans cette partie sont réalisables dans des espaces de dimensionnalité supérieure.} et en utilisant une fonction de distance euclidienne pour mesurer la similarité entre deux nuances.
+Mais comment circonscrire l’extension de la catégorie ROUGE dans cet espace colorimétrique ?
+On se fixe pour cela un premier objectif qui est de délimiter une région $R$ contenant toutes les nuances de ROUGE, mais ne contenant aucune nuance d'ORANGE, ni de VIOLET. On admet qu’on dispose des prototypes du ROUGE, de l’ORANGE et du VIOLET respectivement notés \(p_r\) , \(p_o\) et \(p_p\) qui correspondent à trois points dans l’espace colorimétrique bidimensionnel. 
+
+Conformément aux principes précédemment exposés, pour tout point \( x \) dans l'espace colorimétrique, la distance de ce dernier avec \(p_r\), \(p_o\) et \(p_p\) permet de savoir \textit{de quel couleur il n'est pas}. La région $R$ doit alors satisfaire les deux conditions suivantes~:
+
+\noindent
+\begin{tabularx}{\textwidth}{ 
+    >{\centering\arraybackslash}m{0.35\textwidth} 
+    X 
+}
+    
+    % --- Première Condition ---
+    \[ \forall x \in R, \mathcal{D}_E(x, p_r) \le \mathcal{D}_E(x, p_o) \]
+    & 
+    Tous les points de la région $R$ sont plus proches de $p_r$ que de $p_o$. Cela signifie que la région $R$ ne contient aucune nuance d'ORANGE.
+    \\
+    % --- Deuxième Condition ---
+    \[ \forall x \in R, \mathcal{D}_E(x, p_r) \le \mathcal{D}_E(x, p_p) \]
+    & 
+    Tous les points de la région $R$ sont plus proches de $p_r$ que de $p_p$.
+    \vspace{0.5em} Cela signifie que la région $R$ ne contient aucune nuance de VIOLET.
+    
+    
+\end{tabularx}
+
+\bigskip
+
+Les trois étapes suivantes (i), (ii) et (iii) expliquent comment construire cette région $R$.
+
+\begin{enumerate}[label=\textbf{(\roman*)}]
+  \item \textbf{Construction de la médiatrice entre $p_r$ et $p_o$}
+  Traçons le segment $[p_r; p_o]$ reliant $p_r$, le prototype du \textsc{rouge}, à $p_o$, prototype de l’\textsc{orange}. Les points de ce segment représentent un dégradé continu du rouge à l'orange, où le point au milieu du segment représente une nuance de couleur équidistante de $p_r$ et $p_o$. L’unique droite qui traverse perpendiculairement le milieu du segment $[p_r; p_o]$ est appelée médiatrice. Cette médiatrice partage le plan en deux demi-plans contenant chacun les points plus proches d’un prototype donné\footnote{Formellement, cette médiatrice est $B(p_r,p_o)=\left\{x\in\mathcal{U} \mid \mathcal{D}_E(x,p_o)=\mathcal{D}_E(x,p_r)\right\}$.} :
+\begin{itemize}
+    \item d'un côté, $H(p_r,p_o)$ contient tous les points plus proches de $p_r$ que de $p_o$,
+    \item de l'autre côté, $H(p_o,p_r)$ contient tous les points plus proches de $p_o$ que de $p_r$.
+\end{itemize}
+Pour rappel, l’objectif est d’obtenir une région qui ne contient aucune nuance d’\textsc{orange} ni aucune nuance de \textsc{violet}. Bien que la région $H(p_r,p_o)$ ne contienne aucune nuance d’\textsc{orange}\footnote{$\forall x\in H(p_r,p_o),\ \mathcal{D}_E(x,p_o)>\mathcal{D}_E(x,p_r)$}, elle a l’inconvénient de contenir au moins une nuance de \textsc{violet}\footnote{Cette hypothèse, qui peut s’écrire $\exists x\in H(p_r,p_o)$ tel que $\mathcal{D}_E(x,p_r)>\mathcal{D}_E(x,p_p)$ ou $H(p_r,p_o)\cap H(p_p,p_r)\neq\emptyset$, est ici admise sans preuve.}, et est donc trop vaste pour être la région cherchée. Il faut donc désunir toutes les nuances violettes incorporées dans la région $H(p_r,p_o)$. C'est ce que font les deux étapes suivantes.
+
+
+  \item \textbf{Construction de la médiatrice entre $p_r$ et $p_p$}
+
+Reproduisons le procédé de la première étape, mais en remplaçant le prototype de l’\textsc{orange} ($p_o$) par celui du \textsc{violet} ($p_p$). Il s’agit donc de construire une nouvelle médiatrice, avec $p_r$ et $p_p$, pour obtenir deux nouveaux demi-plans. Parmi ces deux demi-plans, c’est $H(p_r,p_p)$ qui retient notre attention. En effet, $H(p_r,p_p)$ ne contient aucune nuance de \textsc{violet} et corrige donc le défaut de $H(p_r,p_o)$. Toutefois, le demi-plan $H(p_r,p_p)$ présente le même travers vis-à-vis de l'\textsc{orange} puisqu’il en contient au moins une nuance. À ce stade, nous avons donc deux régions qui excèdent chacune la région cible de deux manières distinctes. Précisons : la région $H(p_r,p_o)$ est trop vaste en ce qu’elle inclut des nuances violettes, lesquelles sont absentes de $H(p_r,p_p)$ ; vice versa, la région $H(p_r,p_p)$ est trop vaste en ce qu’elle inclut des nuances oranges, lesquelles sont absentes de $H(p_r,p_o)$.
+
+\begin{figure}[h!]
+\centering
+
+% --- Minipage pour la Figure 2a (Inchangée, car elle est correcte) ---
+\begin{minipage}{.48\linewidth}
+\centering
+\begin{tikzpicture}
+    % Définitions locales
+    \def\sqsize{4}
+    \tikzset{point/.style={circle, fill, inner sep=1.5pt}}
+    \definecolor{pocolor}{RGB}{243,146,0}
+    \definecolor{prcolor}{RGB}{227,27,35}
+    \definecolor{ppcolor}{RGB}{128,0,128}
+
+    % Coordonnées de référence
+    \coordinate (pr) at (2, 2);
+    \coordinate (po) at (1, 3);
+    \coordinate (pp) at (3, 1);
+
+    % Médiatrice pour Fig 2a: y = x + 1
+    \coordinate (A) at (0, 1);
+    \coordinate (B) at (3, 4);
+
+    % Hachurage de H(pr, po)
+    \begin{scope}
+        \clip (A) -- (0,0) -- (4,0) -- (4,4) -- (B) -- cycle;
+        \fill[gray!20] (0,0) rectangle (\sqsize, \sqsize);
+        \foreach \k in {1,1.75,...,8} { \draw[dashed] (0, \k) -- (\k, 0); }
+    \end{scope}
+    
+    % Contours et points
+    \draw (0,0) rectangle (\sqsize, \sqsize);
+    \draw[thick] (A) -- (B);
+    \node[point, color=pocolor, label=above:{$p_o$}] at (po) {};
+    \node[point, color=prcolor, label=above:{$p_r$}] at (pr) {};
+    \node[point, color=ppcolor, label=above:{$p_p$}] at (pp) {};
+
+    \node[below=4pt] at (\sqsize/2, 0) {Fig. 2a. Le demi-plan $H(p_r, p_o)$};
+\end{tikzpicture}
+\end{minipage}
+\hfill
+% --- Minipage pour la Figure 2b (Avec le chemin de clip corrigé) ---
+\begin{minipage}{.48\linewidth}
+\centering
+\begin{tikzpicture}
+    % Définitions locales
+    \def\sqsize{4}
+    \tikzset{point/.style={circle, fill, inner sep=1.5pt}}
+    \definecolor{pocolor}{RGB}{243,146,0}
+    \definecolor{prcolor}{RGB}{227,27,35}
+    \definecolor{ppcolor}{RGB}{128,0,128}
+
+    % Coordonnées de référence
+    \coordinate (pr) at (2, 2);
+    \coordinate (po) at (1, 3);
+    \coordinate (pp) at (3, 1);
+
+    % Médiatrice pour Fig 2b: y = x - 1
+    \coordinate (C) at (1, 0);
+    \coordinate (D) at (4, 3);
+
+    % Hachurage de H(pr, pp)
+    \begin{scope}
+        % **CORRECTION** : Ce chemin suit maintenant les bords du carré.
+        \clip (C) -- (D) -- (4,4) -- (0,4) -- (0,0) -- cycle;
+        \fill[gray!20] (0,0) rectangle (\sqsize, \sqsize);
+        \foreach \k in {1,1.75,...,8} { \draw[dashed] (0, \k) -- (\k, 0); }
+    \end{scope}
+    
+    % Contours et points
+    \draw (0,0) rectangle (\sqsize, \sqsize);
+    \draw[thick] (C) -- (D);
+    \node[point, color=pocolor, label=above:{$p_o$}] at (po) {};
+    \node[point, color=prcolor, label=above:{$p_r$}] at (pr) {};
+    \node[point, color=ppcolor, label=above:{$p_p$}] at (pp) {};
+
+    \node[below=4pt] at (\sqsize/2, 0) {Fig. 2b. Le demi-plan $H(p_r, p_p)$};
+\end{tikzpicture}
+\end{minipage}
+\end{figure}
+
+  \item \textbf{Intersection de $H(p_r,p_o)$ et de $H(p_r,p_p)$}
+\end{enumerate}
+
+Ce non-recouvrement des excès des deux demi-plans invite à considérer leur intersection afin de déterminer une région plus petite satisfaisant toutes les conditions de la région cible. En d’autres termes, l’ensemble des nuances communes à $H(p_r,p_o)$ et $H(p_r,p_p)$ est une région réduite qui concentre toutes les nuances du \textsc{rouge} tout en écartant toutes les nuances d’\textsc{orange} et de \textsc{violet}. L’intersection correspond donc à la zone où les deux se croisent, comme illustré ci-après :
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}
+    \def\sqsize{4}
+    \tikzset{point/.style={circle, fill, inner sep=1.5pt}}
+    \definecolor{pocolor}{RGB}{243,146,0}
+    \definecolor{prcolor}{RGB}{227,27,35}
+    \definecolor{ppcolor}{RGB}{128,0,128}
+
+    % --- Coordonnées de référence (identiques aux figures 2a et 2b) ---
+    \coordinate (pr) at (2, 2);
+    \coordinate (po) at (1, 3);
+    \coordinate (pp) at (3, 1);
+
+    % --- Médiatrices (identiques aux figures 2a et 2b) ---
+    % Médiatrice entre p_o et p_r: y = x + 1
+    \coordinate (A) at (0, 1);
+    \coordinate (B) at (3, 4);
+    % Médiatrice entre p_r et p_p: y = x - 1
+    \coordinate (C) at (1, 0);
+    \coordinate (D) at (4, 3);
+    
+    % --- DESSIN DE LA FIGURE 2c ---
+    
+    % On définit le polygone exact de l'intersection
+    % Ce chemin à 6 sommets trace la bande centrale jusqu'aux bords du carré.
+    \def\intersectionpath{(A) -- (B) -- (4,4) -- (D) -- (C) -- (0,0) -- cycle}
+
+    % 1. Remplir ce polygone en gris
+    \fill[gray!20] \intersectionpath;
+
+    % 2. Utiliser ce même polygone pour clipper les hachures
+    \begin{scope}
+        \clip \intersectionpath;
+        % La boucle des hachures est identique à celle des figures 2a et 2b.
+        \foreach \k in {1,1.75,...,8} { 
+            \draw[dashed] (0, \k) -- (\k, 0); 
+        }
+    \end{scope}
+
+    % 3. Dessiner les contours et les points par-dessus pour une meilleure visibilité
+    % Contour du carré
+    \draw (0,0) rectangle (\sqsize, \sqsize);
+    % Lignes des médiatrices
+    \draw[thick] (A) -- (B);
+    \draw[thick] (C) -- (D);
+    
+    % Points et leurs étiquettes (positions identiques)
+    \node[point, color=pocolor, label=above:{$p_o$}] at (po) {};
+    \node[point, color=prcolor, label=above:{$p_r$}] at (pr) {};
+    \node[point, color=ppcolor, label=above:{$p_p$}] at (pp) {};
+
+    % 4. Légende de la figure
+    \node[below=4pt] at (\sqsize/2, 0) {Fig. 2c. Intersection de $H(p_r, p_o)$ et $H(p_r, p_p)$};
+\end{tikzpicture}
+\end{figure}
+
+
+Cette construction peut être encore reproduite s’il existe davantage de prototypes adjacents au prototype du ROUGE. Par exemple, si $p_m$ est le prototype du MAGENTA et que l'on cherche à obtenir une région excluant toute nuance de VIOLET, d'ORANGE et de MAGENTA, il convient de construire un nouveau demi-plan $H(p_r, p_m)$ et de l'intersecter avec les deux précédents. Cette intersection produit une région qui exclue toute nuance d'ORANGE, de VIOLET et de MAGENTA, comme illustré sur la Fig 3b :
+
+
+\begin{figure}[h!]
+\centering % Centre l'ensemble des deux minipages sur la page
+
+% --- PREMIÈRE FIGURE (GAUCHE) ---
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+    % --- Définitions ---
+    \def\sqsize{4}
+    
+    % LA SOLUTION : On définit explicitement la boîte que LaTeX doit "voir"
+    % Tout ce qui dépasse sera dessiné, mais ignoré pour l'alignement.
+    \useasboundingbox (0,0) rectangle (\sqsize, \sqsize);
+
+    \tikzset{point/.style={circle, fill, inner sep=1.5pt}}
+    
+    % Définition des 4 couleurs de points
+    \definecolor{pocolor}{RGB}{243,146,0} % Orange
+    \definecolor{prcolor}{RGB}{227,27,35} % Rouge
+    \definecolor{ppcolor}{RGB}{128,0,128} % Violet
+    \definecolor{pmcolor}{RGB}{255,0,255} % Rose (Magenta)
+
+    % --- Coordonnées des points ---
+    \coordinate (pr) at (2, 2);
+    \coordinate (po) at (1, 3);
+    \coordinate (pp) at (3, 1);
+    \coordinate (pm) at (3, 3);
+
+    % --- Médiatrice : H(pr, pm) ---
+    % Sépare pr(2,2) et pm(3,3). Équation: y = -x + 5
+    \coordinate (E) at (1, 4);
+    \coordinate (F) at (4, 1);
+
+    % --- Hachurage de la région H(pr, pm) ---
+    \begin{scope}
+        \clip (0,0) -- (4,0) -- (F) -- (E) -- (0,4) -- cycle;
+        
+        \fill[gray!20] (0,0) rectangle (\sqsize, \sqsize);
+        % Les hachures perpendiculaires
+        \foreach \k in {-3,-2.25,...,4} { 
+            \draw[dashed] (0, \k) -- (\sqsize, \sqsize+\k); 
+        }
+    \end{scope}
+    
+    % --- Contours et points ---
+    \draw (0,0) rectangle (\sqsize, \sqsize);
+    \draw[thick] (E) -- (F);
+    
+    % Dessin des 4 points et de leurs étiquettes
+    \node[point, color=pocolor, label=above:{$p_o$}] at (po) {};
+    \node[point, color=prcolor, label=above:{$p_r$}] at (pr) {};
+    \node[point, color=ppcolor, label=above:{$p_p$}] at (pp) {};
+    \node[point, color=pmcolor, label=above:{$p_m$}] at (pm) {};
+
+    % --- Légende (corrigée) ---
+    \node[below=4pt] at (\sqsize/2, 0) {Fig. 3a. Le demi-plan $H(p_r, p_m)$};
+\end{tikzpicture}
+\end{minipage}
+\hfill % Crée un espace flexible entre les deux figures
+% --- DEUXIÈME FIGURE (DROITE) ---
+\begin{minipage}{0.48\textwidth}
+\centering
+\begin{tikzpicture}
+    % --- Définitions ---
+    \def\sqsize{4}
+    
+    \useasboundingbox (0,0) rectangle (\sqsize, \sqsize);
+
+    \tikzset{point/.style={circle, fill, inner sep=1.5pt}}
+    \definecolor{pocolor}{RGB}{243,146,0} % Orange
+    \definecolor{prcolor}{RGB}{227,27,35} % Rouge
+    \definecolor{ppcolor}{RGB}{128,0,128} % Violet
+    \definecolor{pmcolor}{RGB}{255,0,255} % Rose (Magenta)
+
+    % --- Coordonnées de référence ---
+    \coordinate (pr) at (2, 2);
+    \coordinate (po) at (1, 3);
+    \coordinate (pp) at (3, 1);
+    \coordinate (pm) at (3, 3);
+
+    % --- Points de départ des médiatrices sur les bords ---
+    \coordinate (A) at (0, 1);
+    \coordinate (C) at (1, 0);
+    
+    % --- Points d'intersection des médiatrices ---
+    \coordinate (TopInt) at (2,3);    % Intersection de H(po) et H(pm)
+    \coordinate (RightInt) at (3,2);  % Intersection de H(pp) et H(pm)
+    
+    % --- DESSIN DE L'INTERSECTION ---
+    \def\intersectionpath{(A) -- (TopInt) -- (RightInt) -- (C) -- (0,0) -- cycle}
+
+    \fill[gray!20] \intersectionpath;
+
+    \begin{scope}
+        \clip \intersectionpath;
+        \foreach \k in {1,1.75,...,8} { 
+            \draw[dashed] (0, \k) -- (\k, 0); 
+        }
+    \end{scope}
+
+    \draw (0,0) rectangle (\sqsize, \sqsize);
+    \draw[thick] (A) -- (TopInt);
+    \draw[thick] (C) -- (RightInt);
+    \draw[thick] (TopInt) -- (RightInt);
+    
+    \node[point, color=pocolor, label=above:{$p_o$}] at (po) {};
+    \node[point, color=prcolor, label=above:{$p_r$}] at (pr) {};
+    \node[point, color=ppcolor, label=above:{$p_p$}] at (pp) {};
+    \node[point, color=pmcolor, label=above:{$p_m$}] at (pm) {};
+
+    \node[below=12pt, align=center, text width=6cm] at (\sqsize/2, 0)
+        {Fig. 3b. Intersection des 3 demi-plans \\ $H(p_r, p_o) \cap H(p_r, p_p) \cap H(p_r, p_m)$};
+\end{tikzpicture}
+\end{minipage}
+
+\end{figure}
+
+
+\vspace*{1.8cm}
+ Cette construction de la région du ROUGE par intersection de demis-plans se généralise à un nombre quelconque de couleurs voisines. Ainsi, la région de Voronoï $v(p_r)$ peut être construite en intersectant tous les demi-plans issus des prototypes adjacents à $p_r$. Cette intersection prend la forme d’un polygone\footnote{Dans un espace tridimensionnel, si tous les points générateurs ne sont pas tous sur un même plan, cette intersection produit un polyèdre. En dimension supérieure, elle produit un polytope} correspondant à l'extension de la catégorie ROUGE. La même méthode est applicable pour délimiter les régions des autres catégories de couleurs.
+
+Chaque région de Voronoï peut donc être définie à partir d'une série d'intersections de demi-plans. Bien que la construction de la région de Voronoï du ROUGE exposée ci-dessus implique seulement les prototypes adjacents, les définitions courantes d'une région de Voronoï posent un ensemble contenant \textit{tous} les prototypes noté $P = \{p_1, \dots, p_n\}$ et étendent l'intersection à \textit{tous} demi-plans construits par les prototypes de cet ensemble. Ainsi, en montant en généralité, une région de Voronoï peut être définie comme suit :
+
+\begin{enumerate}[label=\textbf{(\arabic*)}]
+    \item La région $v(p_i)$ est l'intersection de tous les demi-plans $H(p_i, p_j)$ pour tout  $p_j \in P \setminus \{p_i\}$ :
+    \[
+        v(p_i) = \bigcap_{p_j \in P \setminus \{p_i\}} H(p_i, p_j)
+    \]
+
+    Il existe une seconde définition équivalente qui procède différemment :
+
+    \item La région $v(p_i)$ est l'ensemble des points plus proches de $p_i$ que de tout autre $p_j \in P\setminus\{p_i\}:$
+    \[
+        v(p_i) := \{p \in U \mid \forall p_j \in P\setminus\{p_i\}, \mathcal{D}_E(p, p_i) \leq \mathcal{D}_E(p, p_j) \}
+    \]
+\end{enumerate}
+
+Bien que la première définition se base sur une série d’intersections de demi-plans et
+la seconde sur une comparaison directe des distances, les deux déterminent la \textit{même région}.
+
+Par ailleurs, bien que ces deux définitions prennent en compte \textit{tous} les prototypes dans $P$ qui sont différents de $p_i$, il est suffisant de considérer uniquement les points prototypiques qui génèrent des régions \textit{adjacentes} à la région générée par $p_i$. Cette restriction aux prototypes adjacents est plus économe parce que cela évite de considérer des points n’ayant pas d’incidence sur la forme de la région de Voronoï ciblée\footnote{Ceci est utile lorsque le nombre de prototypes est très élevé, permettant ainsi une construction plus efficace de la région de Voronoï souhaitée}. Les deux pavages suivants illustrent en deux dimensions le fait que les prototypes non adjacents n’ont pas d’incidence sur la forme d’une région de Voronoï :
+
+\begin{figure}[htbp]
+\centering
+
+\scalebox{0.23540867}{%
+  \begin{tikzpicture}[x=1cm,y=1cm]
+
+    \clip (-12.745995,-13.589511) rectangle (12.533908,14.022047);
+
+    % Voronoi edges (first diagram)
+    \draw[black, line width=0.6pt] (-0.559627,-8.787743) -- (2.520338,-4.530391);
+    \draw[black, line width=0.6pt] (12.066653,5.518914) -- (3.847612,7.546636);
+    \draw[black, line width=0.6pt] (3.832608,7.649620) -- (3.847612,7.546636);
+    \draw[black, line width=0.6pt] (0.057146,9.406985) -- (3.832608,7.649620);
+    \draw[black, line width=0.6pt] (-0.559627,-8.787743) -- (-1.531859,-7.996630);
+    \draw[black, line width=0.6pt] (2.565288,-3.332525) -- (2.520338,-4.530391);
+    \draw[black, line width=0.6pt] (2.565288,-3.332525) -- (0.405454,-2.925077);
+    \draw[black, line width=0.6pt] (0.405454,-2.925077) -- (-1.788788,-3.022933);
+    \draw[black, line width=0.6pt] (-1.788788,-3.022933) -- (-3.976994,-3.947916);
+    \draw[black, line width=0.6pt] (-1.531859,-7.996630) -- (-3.976994,-3.947916);
+    \draw[black, line width=0.6pt] (-1.531859,-7.996630) -- (-28.426955,-9.496830);
+    \draw[black, line width=0.6pt] (3.250202,-2.298963) -- (4.508926,3.819139);
+    \draw[black, line width=0.6pt] (3.250202,-2.298963) -- (3.297492,-2.571060);
+    \draw[black, line width=0.6pt] (3.297492,-2.571060) -- (5.941640,-2.389622);
+    \draw[black, line width=0.6pt] (5.941640,-2.389622) -- (8.077771,3.837573);
+    \draw[black, line width=0.6pt] (8.077771,3.837573) -- (4.508926,3.819139);
+    \draw[black, line width=0.6pt] (3.556407,4.392998) -- (4.508926,3.819139);
+    \draw[black, line width=0.6pt] (3.556407,4.392998) -- (1.945683,4.280446);
+    \draw[black, line width=0.6pt] (1.439579,0.463548) -- (1.945683,4.280446);
+    \draw[black, line width=0.6pt] (1.439579,0.463548) -- (3.250202,-2.298963);
+    \draw[black, line width=0.6pt] (2.565288,-3.332525) -- (3.297492,-2.571060);
+    \draw[black, line width=0.6pt] (12.066653,5.518914) -- (8.077771,3.837573);
+    \draw[black, line width=0.6pt] (3.556407,4.392998) -- (3.847612,7.546636);
+    \draw[black, line width=0.6pt] (-497.595649,691.320109) -- (-7.941075,5.198040);
+    \draw[black, line width=0.6pt] (-28.426955,-9.496830) -- (-13.436426,-3.878541);
+    \draw[black, line width=0.6pt] (-7.941075,5.198040) -- (-13.436426,-3.878541);
+    \draw[black, line width=0.6pt] (0.057146,9.406985) -- (-1.063683,6.335252);
+    \draw[black, line width=0.6pt] (1.945683,4.280446) -- (0.283933,4.694136);
+    \draw[black, line width=0.6pt] (-1.063683,6.335252) -- (0.283933,4.694136);
+    \draw[black, line width=0.6pt] (1.439579,0.463548) -- (-1.285312,1.617184);
+    \draw[black, line width=0.6pt] (0.283933,4.694136) -- (-1.285312,1.617184);
+    \draw[black, line width=0.6pt] (0.405454,-2.925077) -- (-1.336338,1.582244);
+    \draw[black, line width=0.6pt] (-1.788788,-3.022933) -- (-2.440309,1.279272);
+    \draw[black, line width=0.6pt] (-2.440309,1.279272) -- (-1.336338,1.582244);
+    \draw[black, line width=0.6pt] (-1.285312,1.617184) -- (-1.336338,1.582244);
+    \draw[black, line width=0.6pt] (-4.341965,6.005219) -- (-6.368652,4.551811);
+    \draw[black, line width=0.6pt] (-4.341965,6.005219) -- (-4.194690,5.936870);
+    \draw[black, line width=0.6pt] (-4.194690,5.936870) -- (-3.870936,1.525256);
+    \draw[black, line width=0.6pt] (-6.368652,4.551811) -- (-11.028557,-3.071093);
+    \draw[black, line width=0.6pt] (-3.870936,1.525256) -- (-10.614183,-3.003518);
+    \draw[black, line width=0.6pt] (-10.614183,-3.003518) -- (-11.028557,-3.071093);
+    \draw[black, line width=0.6pt] (-497.595649,691.320109) -- (-4.341965,6.005219);
+    \draw[black, line width=0.6pt] (-7.941075,5.198040) -- (-6.368652,4.551811);
+    \draw[black, line width=0.6pt] (-1.063683,6.335252) -- (-4.194690,5.936870);
+    \draw[black, line width=0.6pt] (-2.440309,1.279272) -- (-3.870936,1.525256);
+    \draw[black, line width=0.6pt] (-13.436426,-3.878541) -- (-11.028557,-3.071093);
+    \draw[black, line width=0.6pt] (-3.976994,-3.947916) -- (-10.614183,-3.003518);
+    \draw[black, line width=0.6pt] (-0.559627,-8.787743) -- (20.922242,-191.607026);
+    \draw[black, line width=0.6pt] (2.520338,-4.530391) -- (112.537819,-152.112621);
+    \draw[black, line width=0.6pt] (12.066653,5.518914) -- (186.021343,65.719635);
+    \draw[black, line width=0.6pt] (3.832608,7.649620) -- (113.771986,155.290041);
+    \draw[black, line width=0.6pt] (0.057146,9.406985) -- (-16.481893,192.739527);
+    \draw[black, line width=0.6pt] (-28.426955,-9.496830) -- (-202.949701,-68.030342);
+    \draw[black, line width=0.6pt] (5.941640,-2.389622) -- (176.685657,-71.170734);
+    \draw[black, line width=0.6pt] (-497.595649,691.320109) -- (-605.011911,840.806254);
+
+    % Non-adjacent points (black, larger) - first diagram
+    \fill[black] (-8.532678,4.900976) circle (6.0pt);
+    \fill[black] (8.320590,0.005979) circle (6.0pt);
+    \fill[black] (-3.023055,8.860025) circle (6.0pt);
+    \fill[black] (5.714295,7.537075) circle (6.0pt);
+    \fill[black] (-7.467810,5.660925) circle (6.0pt);
+    \fill[black] (-3.043220,-0.757295) circle (6.0pt);
+    \fill[black] (-5.670705,3.154975) circle (6.0pt);
+    \fill[black] (-3.874567,-8.987585) circle (6.0pt);
+    \fill[black] (2.061262,7.004836) circle (6.0pt);
+    \fill[black] (-3.970242,-7.272364) circle (6.0pt);
+    \fill[black] (-7.930073,4.536133) circle (6.0pt);
+    \fill[black] (5.504544,6.686885) circle (6.0pt);
+    \fill[black] (3.185505,9.420120) circle (6.0pt);
+    \fill[black] (2.711346,-8.213718) circle (6.0pt);
+
+    % Adjacent points (orange, larger) - first diagram
+    \fill[orange] (-1.037827,-5.501394) circle (7.0pt);
+    \fill[orange] (2.439032,1.598606) circle (7.0pt);
+    \fill[orange] (0.770469,1.819850) circle (7.0pt);
+    \fill[orange] (-2.328367,3.400257) circle (7.0pt);
+    \fill[orange] (5.995725,-5.765327) circle (7.0pt);
+    \fill[orange] (5.534116,0.961831) circle (7.0pt);
+    \fill[orange] (-1.261431,-0.487463) circle (7.0pt);
+
+    % Central point (red, larger) - first diagram
+    \fill[red] (0.000000,0.000000) circle (7.0pt);
+
+    % Black frame around the drawing (first)
+    \draw[black, line width=1.8pt, draw opacity=0.950] (-12.745995,-13.589511) rectangle (12.533908,14.022047);
+
+  \end{tikzpicture}%
+}
+\hspace{0.8cm}
+\scalebox{0.23540867}{%
+  \begin{tikzpicture}[x=1cm,y=1cm] % <-- coordinates in cm; scaled by \scalebox
+
+    \clip (-12.745995,-13.589511) rectangle (12.533908,14.022047);
+
+    % Voronoi edges (second diagram)
+    \draw[black, line width=0.6pt] (86.426499,-9.960661) -- (9.232176,-1.275391);
+    \draw[black, line width=0.6pt] (7.179789,5.713134) -- (9.232176,-1.275391);
+    \draw[black, line width=0.6pt] (-7.984293,4.575056) -- (-7.716082,3.994574);
+    \draw[black, line width=0.6pt] (-1.595823,7.462421) -- (-7.209741,3.572875);
+    \draw[black, line width=0.6pt] (-7.716082,3.994574) -- (-7.209741,3.572875);
+    \draw[black, line width=0.6pt] (-2.031432,-8.955756) -- (-4.092735,-6.924055);
+    \draw[black, line width=0.6pt] (-4.092735,-6.924055) -- (-40.953573,-25.887031);
+    \draw[black, line width=0.6pt] (-7.209741,3.572875) -- (-6.874556,2.173518);
+    \draw[black, line width=0.6pt] (-13.690622,-1.604159) -- (-6.874556,2.173518);
+    \draw[black, line width=0.6pt] (0.405454,-2.925077) -- (-4.541960,-3.145714);
+    \draw[black, line width=0.6pt] (0.405454,-2.925077) -- (-1.336338,1.582244);
+    \draw[black, line width=0.6pt] (-4.541960,-3.145714) -- (-5.573929,-2.048511);
+    \draw[black, line width=0.6pt] (-1.336338,1.582244) -- (-5.799349,0.357426);
+    \draw[black, line width=0.6pt] (-5.799349,0.357426) -- (-5.620772,-1.798834);
+    \draw[black, line width=0.6pt] (-5.573929,-2.048511) -- (-5.620772,-1.798834);
+    \draw[black, line width=0.6pt] (-4.092735,-6.924055) -- (-4.541960,-3.145714);
+    \draw[black, line width=0.6pt] (-40.953573,-25.887031) -- (-5.573929,-2.048511);
+    \draw[black, line width=0.6pt] (-13.690622,-1.604159) -- (-5.620772,-1.798834);
+    \draw[black, line width=0.6pt] (-6.874556,2.173518) -- (-5.799349,0.357426);
+    \draw[black, line width=0.6pt] (86.426499,-9.960661) -- (8.240374,-7.579608);
+    \draw[black, line width=0.6pt] (9.232176,-1.275391) -- (7.884069,-2.256335);
+    \draw[black, line width=0.6pt] (8.240374,-7.579608) -- (7.884069,-2.256335);
+    \draw[black, line width=0.6pt] (7.179789,5.713134) -- (4.508938,3.819198);
+    \draw[black, line width=0.6pt] (7.884069,-2.256335) -- (3.297492,-2.571060);
+    \draw[black, line width=0.6pt] (3.297492,-2.571060) -- (3.250202,-2.298963);
+    \draw[black, line width=0.6pt] (3.250202,-2.298963) -- (4.508938,3.819198);
+    \draw[black, line width=0.6pt] (5.768801,-14.910320) -- (5.921438,-9.937631);
+    \draw[black, line width=0.6pt] (5.768801,-14.910320) -- (-1.640145,-8.913239);
+    \draw[black, line width=0.6pt] (5.921438,-9.937631) -- (2.462876,-6.061686);
+    \draw[black, line width=0.6pt] (-1.640145,-8.913239) -- (2.462876,-6.061686);
+    \draw[black, line width=0.6pt] (8.240374,-7.579608) -- (5.921438,-9.937631);
+    \draw[black, line width=0.6pt] (-2.031432,-8.955756) -- (-1.640145,-8.913239);
+    \draw[black, line width=0.6pt] (2.565288,-3.332525) -- (2.462876,-6.061686);
+    \draw[black, line width=0.6pt] (2.565288,-3.332525) -- (3.297492,-2.571060);
+    \draw[black, line width=0.6pt] (0.405454,-2.925077) -- (2.565288,-3.332525);
+    \draw[black, line width=0.6pt] (0.066678,4.268145) -- (-1.285312,1.617184);
+    \draw[black, line width=0.6pt] (0.066678,4.268145) -- (1.860098,3.634991);
+    \draw[black, line width=0.6pt] (1.860098,3.634991) -- (1.439579,0.463548);
+    \draw[black, line width=0.6pt] (-1.285312,1.617184) -- (1.439579,0.463548);
+    \draw[black, line width=0.6pt] (-1.595823,7.462421) -- (0.066678,4.268145);
+    \draw[black, line width=0.6pt] (-1.336338,1.582244) -- (-1.285312,1.617184);
+    \draw[black, line width=0.6pt] (4.508938,3.819198) -- (1.860098,3.634991);
+    \draw[black, line width=0.6pt] (3.250202,-2.298963) -- (1.439579,0.463548);
+    \draw[black, line width=0.6pt] (-7.984293,4.575056) -- (24.475587,236.208422);
+    \draw[black, line width=0.6pt] (-7.984293,4.575056) -- (-185.849839,156.468135);
+    \draw[black, line width=0.6pt] (7.179789,5.713134) -- (84.056061,226.615146);
+    \draw[black, line width=0.6pt] (86.426499,-9.960661) -- (319.502705,-29.534686);
+    \draw[black, line width=0.6pt] (-1.595823,7.462421) -- (68.997043,230.451899);
+    \draw[black, line width=0.6pt] (-2.031432,-8.955756) -- (-90.924558,-225.301942);
+    \draw[black, line width=0.6pt] (-40.953573,-25.887031) -- (-241.716100,-145.895647);
+    \draw[black, line width=0.6pt] (-7.716082,3.994574) -- (-237.249285,-40.973955);
+    \draw[black, line width=0.6pt] (-13.690622,-1.604159) -- (-231.334466,-87.271055);
+    \draw[black, line width=0.6pt] (5.768801,-14.910320) -- (56.694366,-243.195770);
+
+    % Black points added for second diagram (larger)
+    \fill[black] (-5.656398,8.203721) circle (6.0pt);
+    \fill[black] (-10.136452,-1.222473) circle (6.0pt);
+    \fill[black] (10.223211,-5.482367) circle (6.0pt);
+    \fill[black] (-5.471063,-9.999220) circle (6.0pt);
+    \fill[black] (-12.256400,5.154195) circle (6.0pt);
+    \fill[black] (-7.396057,-6.257354) circle (6.0pt);
+    \fill[black] (-0.319073,-12.116088) circle (6.0pt);
+    \fill[black] (1.767642,-9.538107) circle (6.0pt);
+    \fill[black] (2.151592,5.731907) circle (6.0pt);
+    \fill[black] (-10.158991,-2.156780) circle (6.0pt);
+    \fill[black] (-11.483176,1.207423) circle (6.0pt);
+    \fill[black] (11.133268,2.606187) circle (6.0pt);
+    \fill[black] (10.091917,-9.793620) circle (6.0pt);
+    \fill[black] (-9.225103,8.703820) circle (6.0pt);
+
+    % Adjacent points (orange, larger) - second diagram
+    \fill[orange] (-1.037827,-5.501394) circle (7.0pt);
+    \fill[orange] (2.439032,1.598606) circle (7.0pt);
+    \fill[orange] (0.770469,1.819850) circle (7.0pt);
+    \fill[orange] (-2.328367,3.400257) circle (7.0pt);
+    \fill[orange] (5.995725,-5.765327) circle (7.0pt);
+    \fill[orange] (5.534116,0.961831) circle (7.0pt);
+    \fill[orange] (-1.261431,-0.487463) circle (7.0pt);
+
+    % Central point (red, larger) - second diagram
+    \fill[red] (0.000000,0.000000) circle (7.0pt);
+
+    % Black frame around the drawing (second)
+    \draw[black, line width=1.8pt, draw opacity=0.950] (-12.745995,-13.589511) rectangle (12.533908,14.022047);
+
+  \end{tikzpicture}%
+}
+
+\caption{Fig 4. Deux pavages de Voronoï partageant les points oranges et rouge en commun.}
+
+\end{figure}
+
+Dans ces deux pavages, les points oranges correspondent à l'ensemble des points qui génèrent des régions de Voronoï adjacentes à celle du point rouge. Puisque les coordonnées du point rouge et de tous les points orange restent les mêmes dans les deux pavages, la cellule de Voronoï du point rouge reste identique. En revanche, les autres points qui produisent des cellules non-adjacentes à celle du rouge, figurés en noir, changent de coordonnées.
+\vspace*{1cm}
+\par
+Si les points dans $P$ sont tous distincts, le pavage de Vorono\"{i} généré par $P$ contient $|P|$
+polygones\footnote{Dans un espace à trois dimensions, les cellules de Voronoï sont des polyèdres, et les frontières des cellules
+sont des faces de Voronoï. Dans un espace à $k$ dimensions dimensions, les cellules de Voronoï sont des \textit{k-polytopes}.} différents. Les polygones constituant un pavage de Vorono\"{i} sont une manière de
+représenter l'organisation optimale des catégories de couleurs entendue comme minimisation
+de la similarité entre catégories différentes et maximisation de la similarité au sein d'une même
+catégorie. Les points $p_i \in P$ sont appelés \textit{points générateurs}\textsuperscript{34} et l'ensemble $P$ est appelé
+\textit{ensemble générateur}. Le pavage de Vorono\"{i} généré par $P$ est l'ensemble de toutes les cellules
+générées par les points dans $P$ :
+
+\[
+V(S) = \{v(p_i) \mid p_i \in P\}
+\]
+
+La littérature sur les espaces conceptuels soulève souvent deux problèmes majeurs liés aux diagrammes de Voronoï classiques. Le premier problème tient à ce que les données expérimentales montrent que les prototypes ne sont pas des points \textit{ uniques} et \textit{précisément localisés}\footnote{Pour les catégories de couleurs, il est peu probable qu’un point unique représente idéalement toute la catégorie mieux que tous les autres. Par exemple, si une nuance prototypique $p_r$ du ROUGE est fixée, il semble qu'une nuance qui diffère très légèrement de $p_r$ a, elle aussi, un degré d'appartenance \textit{maximal} au rouge et pourrait donc, elle aussi, être prise comme point prototypique.}. Le second problème tient au fait que les cas-limites entre deux catégories n'ont aucun espace propre. En effet, en deux dimensions, les cas-limites sont identifiés aux points situés sur les \textit{arêtes} d'un pavage de Voronoï, mais ces arêtes n'ont \textit{aucune épaisseur}. C'est un problème car il semble y avoir \textit{beaucoup} de cas-limites entre deux couleurs. Bien qu'il semble s'agir de deux problèmes distincts, la modification des diagrammes de Voronoï classiques en diagrammes créés à partir de \textit{régions prototypiques} permet \textit{en théorie} de les résoudre tous les deux à la fois.
+
+\par
+
+Les \emph{régions prototypiques} permettent notamment de rendre compte de la \emph{flexibilité sémantique} d'un concept. Exprimons deux conditionnels mutuellement exclusifs qui mettent en évidence cette flexibilité. Prenons pour exemple la catégorie \textsc{rouge} en supposant qu'il existe deux points prototypiques avec des positions distinctes notés $p_{\text{rouge}_1}$ et $p_{\text{rouge}_2}$. On admet qu'on a $n$ autres points prototypiques qui sont fixés et qui correspondent à toutes les autres couleurs. Autrement dit, la catégorisation de $x$ dépend du choix du prototype, la catégorie correspondante a une certaine flexibilité sémantique dans la mesure où les deux choix sont possibles.
+
+\par
+Douven montre formellement, dans le cas unidimensionnel, que plus l'intervalle séparant deux prototypes d'une même catégorie s'allonge, plus la \emph{zone de flou} — c'est-à-dire l'ensemble des points dont l'appartenance catégorielle varie selon lequel des deux prototypes on prend — s'agrandit. Cette observation se transpose qualitativement en dimension supérieure : un élargissement de la dispersion des sites prototypiques le long d'une dimension $d$ accroît la taille de l'ensemble des points ambigus le long de $d$. En revanche, une démonstration rigoureuse en dimensions supérieures requiert des outils mathématiques avancés et dépasse le cadre de ce travail. Cette lecture conditionnelle des régions prototypiques fournit néanmoins une interprétation claire et opérationnelle de la flexibilité sémantique : l'étendue géométrique des régions prototypiques le long d'une dimension encode directement la marge d'indétermination liée à cette dimension.
+
+
+Dès son premier livre sur les espaces conceptuels, Gärdenfors était conscient qu’un unique prototype pouvait idéaliser l'homogénétité des catégories\footnote{Gärdenfors (2000, 4.3.3): "Although the match is still not perfect, I believe that if the generalized Voronoi model that is presented in section 4.9 is used as the appropriate geometrical model, most of the remaining misfit can be accounted for".} et a proposé des régions prototypiques circulaires pour définir des « pavages de Voronoï généralisés »\footnote{Gärdenfors (2000, 4.9) “One can indroduce the notion of a prototypical area and then determine a generalized Voronoi tessellation by computing distances from such areas instead. This idea is modeled by assuming that the prototypical area for a concept is described by a circle with centre p = $\langle p_1,... , p_n \rangle$ and radius $c_p$”. }. Sa représentation des régions prototypiques par des cercles a ensuite été améliorée par (Douven et al. 2011) dans un modèle plus souple mais plus complexe.
+
+\par
+Pour déterminer les nuances prototypiques de bleu à partir des résultats des tâches de  catégorisation \textit{binaire}, on peut procéder comme suit. Un nombre $n$ de participants a décrété  pour $k$ nuances si elle était \textit{bleue} ou \textit{non bleue}. S'il y a certaines nuances qui ont été considérées  comme bleues par tous les participants, elles doivent en principe être considérées dans la région prototypique du bleu. De manière plus générale, pour chacune des $k$ nuances, il y a un nombre  de participants entre 0 et $n$ qui l'a considérée comme \textsc{bleu}. Cela permet d'ordonner les $k$ nuances en fonction du nombre de participants qui ont voté \textsc{bleu}, et les nuances en haut de ce  classement sont considérées comme faisant partie de la région prototypique du \textsc{bleu}.
+
+\par
+Montrons que si l'on assigne au ROUGE deux prototypes différents, la catégorie du ROUGE gagne en flexibilité.
+Pour ce faire, on suppose d'abord que les prototypes de toutes les autres couleurs sont connus et fixés ; notons cet ensemble  \(P\) qui contient, donc, tous les points prototypiques à l'exception de celui de la catégorie du ROUGE. Posons deux points prototypiques pour le rouge, notés $p_{\text{rouge}_1}$ et $ p_{\text{rouge}_2}$ en admettant que \(p_{\text{rouge}_1}\neq p_{\text{rouge}_2}\) c'est-à-dire qu'ils ont des positions distinctes. On peut donc définir deux ensembles $P_1$ et $P_2$ qui ne diffèrent que par la position du prototype du \textsc{rouge} :
+\[
+P_1 \;=\; P \cup \{p_{\text{rouge}_1}\}
+\qquad\text{et}\qquad
+P_2 \;=\; P \cup \{p_{\text{rouge}_2}\},
+\]
+
+On obtient dès lors deux régions de Voronoi différentes pour la catégorie du ROUGE : la première au sein du diagramme de Voronoi construit avec $P_1$ et ayant $p_{\text{rouge}_1}$ pour point générateur. La seconde au sein du diagramme de Voronoi construit avec $P_2$ et ayant $p_{\text{rouge}_2}$ pour point générateur. Il y a flexibilité en ce que ces deux régions \textit{ne se recouvrent pas} : il existe des nuances de couleur $x$ qui se situent dans la première mais pas dans la seconde, et inversement ! Ces "points frontières" permettent d'exprimer la flexibilité sémantique de manière conditionnelle : si l'on raisonne avec l'ensemble \(P\) (c'est-à-dire en prenant \(p_{\text{rouge}_1}\) comme prototype du \textsc{rouge}) — le minimiseur de la distance pour \(x\) est \(p_{\text{rouge}_1}\), donc \(x\) tombe dans la cellule de Voronoï de \(p_{\text{rouge}_1}\) et est classé comme \textsc{rouge}. En revanche, si l'on raisonne avec \(P'\) (en prenant \(p_{\text{rouge}_2}\) comme prototype du \textsc{rouge}), le minimiseur pour \(x\) n'est plus \(p_{\text{rouge}_2}\), donc \(x\) n'appartient plus à la cellule associée au \textsc{rouge} et n'est plus classé comme tel\footnote{Formellement :\[
+\arg\min_{q\in P_1}\mathcal{D}_E(x,q)=\{p_{\text{rouge}_1}\}
+\qquad\text{et}\qquad
+\arg\min_{q\in P_2}\mathcal{D}_E(x,q)\neq\{p_{\text{rouge}_2}\}.
+\]}
+
+
+
+
+
+
+\end{document}
