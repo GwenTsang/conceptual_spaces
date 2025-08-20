@@ -7,10 +7,21 @@ The file [Tesselations_Voronoi.ipynb](https://github.com/ZygoOoade/conceptual_sp
 The file [Glove__sleep__DRM_visualisation.ipynb](https://github.com/ZygoOoade/conceptual_spaces/blob/main/Glove__sleep__DRM_visualisation.ipynb) was a draft for modeling the DRM effect. It would be better to use more recent embeddings, and also to apply MDS rather than PCA.
 
 # TODO
+## Intro
+- Retirer la section sur le clustering du fichier LaTeX "nouvelle version en français" pour le mettre en annexe
+- Ajouter l'ancienne introduction à la suite de la nouvelle introduction avec une transition souple
+
+
+## Chapitre 1
+- Traduire le passage sur les deux fonctions d'appartenance gradée de l'anglais vers le français.
+ - Intégrer ce passage dans la section 1.5.2
 
 - Décomposer en sous parties le code python "Corrélation positive entre la taille de la région prototypique et l'épaisseur de la zone de transition". Cette décomposition permettra d'y voir plus clair.
+- Mettre lien vers le Colab Notebook en footnote ou bien en annexe
 - Une fois cette décomposition opérée, ajouter des détails formels sur cette corrélation : la démonstration de Douven pour le cas 1-dimensionnel et mes résultats en python pour le cas 2-dimensionnel.
-- Traduire mon document de l'anglais concernant les membership functions vers le français.
+
+## Chapitre sur les DRM
+- Ajouter une mention de SINr et en dire plus concernant la possibilité de démêler les dimensions
 
 
 - Rédiger une partie sur la possibilité d'améliorer les relations de distance dans StyleGAN3, de manière à optimiser l'équation `D(x,y) = Dissimilarité(x,y)` et de contribuer à en faire un espace conceptuel / un similarity space.
