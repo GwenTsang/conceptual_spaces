@@ -15,3 +15,5 @@ For more details, we refer to the Python implementation of the conceptual space 
 ## Chapitre 1
 
 - Décomposer en sous parties le code python "Corrélation positive entre la taille de la région prototypique et l'épaisseur de la zone de transition". Cette décomposition permettra d'y voir plus clair.
+
+- Au chapitre 2, proposer des distinctions plus fines et plus étoffées entre vecteurs linguistiques et vecteurs distributionnels (support possible : https://arxiv.org/pdf/1506.05230)
